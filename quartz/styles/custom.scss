@@ -1,0 +1,77 @@
+@use "./variables.scss" as *;
+
+// variables in util/theme.ts
+
+:root {
+  --titleFont: "monospace";
+  --bodyFont: "monospace";
+  --headerFont: "monospace";
+  --codeFont: "monospace";
+  --font-text: "monospace";
+  --font-interface: "monospace", ui-sans-serif, -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, "Inter", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  --font-monospace: "monospace", IBM Plex Mono;
+}
+
+h2 {
+  font-family: var(--titleFont) !important;
+}
+
+html {
+  font-size: 14px;
+}
+
+body, .center, code {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+li:hover >a{
+  color: var(--tertiary);
+  opacity: 1;
+}
+
+.internal {
+  background-color: transparent;
+}
+
+code {
+  background-color: var(--lightgray);
+  border: 1px, solid, var(--gray);
+  transition: border-color 0.2 ease;
+}
+
+.folder-container div>a{
+  font-size: 1rem;
+}
+
+.page-header {
+  margin-top: 0px;
+}
+
+.center {
+  padding: 20px;
+  margin: 0;
+  margin-top: 70px;
+  border-radius: 10px;
+  background-color: var(--darker);
+  box-shadow: 0px 0px 19px 1px var(--shadow);
+
+}
+
+.page>#quartz-body {
+  justify-items: center;
+}
+
+.sidebar {
+  @media all and ($mobile) {
+    position: relative;
+  }
+}
+
+.center {
+  @media all and ($mobile) {
+    margin-top: 10px;
+    background-color: transparent;
+    box-shadow: none;
+    padding: 0;
+  }
+}
