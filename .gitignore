@@ -1,3 +1,4 @@
 node_modules
-.quatz_cache
+.quartz-cache
+.quartz
 public
