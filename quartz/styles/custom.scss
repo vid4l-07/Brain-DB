@@ -12,6 +12,11 @@
   --font-monospace: "monospace", IBM Plex Mono;
 }
 
+::selection {
+  background-color: #81a1c1;
+  color: #222630;
+}
+
 h2 {
   font-family: var(--titleFont) !important;
 }
@@ -50,15 +55,48 @@ code {
 .center {
   padding: 20px;
   margin: 0;
-  margin-top: 70px;
   border-radius: 10px;
   background-color: var(--darker);
   box-shadow: 0px 0px 19px 1px var(--shadow);
+  margin-top: 15px;
+
+  @media all and ($desktop) {
+    margin-top: 70px;
+  }
 
 }
 
+footer {
+    opacity: .7;
+    align-content: center;
+    justify-items: center;
+    margin: 2rem 0 4rem;
+    display: grid;
+    grid-template-rows: 30px 30px;
+    align-items: center;
+}
+
+footer ul {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  padding-inline-start: 0;
+  gap: 1rem;
+}
+
+
 .page>#quartz-body {
   justify-items: center;
+
+  @media all and ($tablet) {
+    margin-top: 45px;
+  }
+}
+
+.toc, .backlinks {
+  @media all and ($tablet) {
+    display: none;
+  }
 }
 
 .sidebar {

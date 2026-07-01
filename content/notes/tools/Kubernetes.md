@@ -6,7 +6,7 @@ Sistema de orquestacion de gestion de contenedores.
 - Control Plane: Cerebro del cluster.
 - Nodes: maquinas que ejecutan trabajos.
 
-![[kubernetes_diagram.svg|697]]
+![[kubernetes_diagram.svg]]
 
 ### Control plane
 Expone la API para solicitudes internas y externas y mantiene el estado global.

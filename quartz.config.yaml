@@ -99,6 +99,7 @@ plugins:
     enabled: true
     options:
       markdownLinkResolution: shortest
+      openLinksInNewTab: true
     order: 60
 
   - source: github:quartz-community/description
@@ -251,7 +252,7 @@ plugins:
       condition: not-index
 
   - source: github:quartz-community/footer
-    enabled: false 
+    enabled: false
     options:
       links:
         GitHub: https://github.com/jackyzha0/quartz

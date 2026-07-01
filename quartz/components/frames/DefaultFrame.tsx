@@ -53,6 +53,13 @@ export const DefaultFrame: PageFrame = {
             <BodyComponent {...componentData} />
           ))}
         </div>
+		<footer>
+			<p>Hugo Vidal ©</p>
+			<ul>
+			  <li><a href="https://github.com/vid4l-07">GitHub</a></li>
+			  <li><a href="https://vid4l-07.github.io/portfolio/">Portfolio</a></li>
+			</ul>
+		</footer>
         <Footer {...componentData} />
       </>
     )
