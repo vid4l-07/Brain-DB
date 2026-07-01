@@ -7,7 +7,7 @@ configuration:
   analytics:
     provider: plausible
   locale: en-US
-  baseUrl: braindb.com
+  baseUrl: /Brain-DB/
   ignorePatterns:
     - private
     - templates
