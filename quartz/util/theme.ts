@@ -178,25 +178,6 @@ export function joinStyles(theme: Theme, ...stylesheet: string[]) {
 ${stylesheet.join("\n\n")}
 
 :root {
-  --light: ${theme.colors.lightMode.light};
-  --lightgray: ${theme.colors.lightMode.lightgray};
-  --darker: #f2f1f5;
-  --gray: ${theme.colors.lightMode.gray};
-  --darkgray: ${theme.colors.lightMode.darkgray};
-  --dark: ${theme.colors.lightMode.dark};
-  --secondary: ${theme.colors.lightMode.secondary};
-  --tertiary: ${theme.colors.lightMode.tertiary};
-  --highlight: ${theme.colors.lightMode.highlight};
-  --textHighlight: ${theme.colors.lightMode.textHighlight};
-  --shadow: rgba(100,100,100,0.21);
-
-  --titleFont: "${getFontSpecificationName(theme.typography.title || theme.typography.header)}", ${DEFAULT_SANS_SERIF};
-  --headerFont: "${getFontSpecificationName(theme.typography.header)}", ${DEFAULT_SANS_SERIF};
-  --bodyFont: "${getFontSpecificationName(theme.typography.body)}", ${DEFAULT_SANS_SERIF};
-  --codeFont: "${getFontSpecificationName(theme.typography.code)}", ${DEFAULT_MONO};
-}
-
-:root[saved-theme="dark"] {
   --light: ${theme.colors.darkMode.light};
   --lightgray: ${theme.colors.darkMode.lightgray};
   --darker: #1e222a;
@@ -208,6 +189,25 @@ ${stylesheet.join("\n\n")}
   --highlight: ${theme.colors.darkMode.highlight};
   --textHighlight: ${theme.colors.darkMode.textHighlight};
   --shadow: rgba(0,0,0,0.21);
+
+  --titleFont: "${getFontSpecificationName(theme.typography.title || theme.typography.header)}", ${DEFAULT_SANS_SERIF};
+  --headerFont: "${getFontSpecificationName(theme.typography.header)}", ${DEFAULT_SANS_SERIF};
+  --bodyFont: "${getFontSpecificationName(theme.typography.body)}", ${DEFAULT_SANS_SERIF};
+  --codeFont: "${getFontSpecificationName(theme.typography.code)}", ${DEFAULT_MONO};
+}
+
+:root[saved-theme="light"] {
+  --light: ${theme.colors.lightMode.light};
+  --lightgray: ${theme.colors.lightMode.lightgray};
+  --darker: #f2f1f5;
+  --gray: ${theme.colors.lightMode.gray};
+  --darkgray: ${theme.colors.lightMode.darkgray};
+  --dark: ${theme.colors.lightMode.dark};
+  --secondary: ${theme.colors.lightMode.secondary};
+  --tertiary: ${theme.colors.lightMode.tertiary};
+  --highlight: ${theme.colors.lightMode.highlight};
+  --textHighlight: ${theme.colors.lightMode.textHighlight};
+  --shadow: rgba(100,100,100,0.21);
 }
 
 :root {

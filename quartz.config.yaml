@@ -40,16 +40,6 @@ configuration:
         tertiary: "#ebcb8b"
         highlight: rgba(88, 82, 96, 0.15)
         textHighlight: "#924f5888"
-      # darkMode:
-      #   light: "#19171c"
-      #   lightgray: "#29262e"
-      #   gray: "#585260"
-      #   darkgray: "#acacac"
-      #   dark: "#acacac"
-      #   secondary: "#5f7e94"
-      #   tertiary: "#5d8686"
-      #   highlight: rgba(88, 82, 96, 0.15)
-      #   textHighlight: "#924f5888"
 plugins:
   # - source:
   #     name: quartz-themes
