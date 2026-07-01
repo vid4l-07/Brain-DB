@@ -7,7 +7,7 @@ configuration:
   analytics:
     provider: plausible
   locale: en-US
-  baseUrl: /Brain-DB/
+  baseUrl: vid4l-07.github.io/Brain-DB
   ignorePatterns:
     - private
     - templates
