@@ -44,6 +44,33 @@ code {
   transition: border-color 0.2 ease;
 }
 
+.graph h3{
+  display: none;
+}
+
+.graph-container {
+  display: none;
+}
+
+.graph-outer {
+  border: none;
+  height: fit-content;
+}
+
+.graph>.graph-outer>.global-graph-icon {
+    cursor: pointer;
+    color: var(--dark-gray);
+    opacity: 1;
+    background: 0 0;
+    border: none;
+    width: 24px;
+    height: 24px;
+    margin: 0;
+    padding: .1rem;
+    transition: background-color .5s;
+    position: relative;
+}
+
 .folder-container div>a{
   font-size: 1rem;
 }
