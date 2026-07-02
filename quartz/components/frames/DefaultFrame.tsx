@@ -56,8 +56,8 @@ export const DefaultFrame: PageFrame = {
 		<footer>
 			<p>Hugo Vidal ©</p>
 			<ul>
-			  <li><a href="https://github.com/vid4l-07">GitHub</a></li>
-			  <li><a href="https://vid4l-07.github.io/portfolio/">Portfolio</a></li>
+			  <li><a href="https://github.com/vid4l-07" target="_blank">GitHub</a></li>
+			  <li><a href="https://vid4l-07.github.io/portfolio/" target="_blank">Portfolio</a></li>
 			</ul>
 		</footer>
         <Footer {...componentData} />

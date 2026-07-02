@@ -10,6 +10,7 @@
   --font-text: "monospace";
   --font-interface: "monospace", ui-sans-serif, -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, "Inter", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
   --font-monospace: "monospace", IBM Plex Mono;
+  --transition: background-color 0.15s linear, color 0.15s linear, border-color 0.15s linear;
 }
 
 ::selection {
@@ -26,7 +27,7 @@ html {
 }
 
 body, .center, code {
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: var(--transition);
 }
 
 li:hover >a{
@@ -38,10 +39,18 @@ li:hover >a{
   background-color: transparent;
 }
 
+pre {
+  border: none;
+}
+
 code {
   background-color: var(--lightgray);
   border: 1px, solid, var(--gray);
   transition: border-color 0.2 ease;
+}
+
+.search>.search-button {
+  transition: border-color 0.2s ease;
 }
 
 .graph h3{
@@ -94,7 +103,7 @@ code {
 }
 
 footer {
-  opacity: .7;
+  opacity: .9;
   align-content: center;
   justify-items: center;
   margin: 2rem 0 4rem;
