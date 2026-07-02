@@ -2,24 +2,53 @@
 
 // variables in util/theme.ts
 
+@font-face {
+  font-family: "Mononoki";
+  src: url("static/fonts/mononoki/MononokiNerdFontMono-Regular.ttf") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Mononoki";
+  src: url("static/fonts/mononoki/MononokiNerdFontMono-Bold.ttf") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Noto Sans Mono";
+  src: url("static/fonts/noto_sans_mono/NotoSansMono-Regular.ttf") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Noto Sans Mono";
+  src: url("static/fonts/noto_sans_mono/NotoSansMono-Bold.ttf") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+
 :root {
-  --titleFont: "monospace";
-  --bodyFont: "monospace";
-  --headerFont: "monospace";
-  --codeFont: "monospace";
-  --font-text: "monospace";
-  --font-interface: "monospace", ui-sans-serif, -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, "Inter", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-  --font-monospace: "monospace", IBM Plex Mono;
+  --titleFont:  "Mononoki", monospace;
+  --bodyFont: "Noto Sans Mono", monospace;
+  --headerFont: "Mononoki", monospace;
+  --codeFont: "Mononoki", monospace;
+  --font-text: "Noto Sans Mono", monospace;
+  --font-interface: "Noto Sans Mono", sans-serif;
+  --font-monospace: "Noto Sans Mono", monospace;
+
   --transition: background-color 0.15s linear, color 0.15s linear, border-color 0.15s linear;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--titleFont) !important;
 }
 
 ::selection {
   background-color: #81a1c1;
   color: #222630;
-}
-
-h2 {
-  font-family: var(--titleFont) !important;
 }
 
 html {
@@ -35,6 +64,10 @@ li:hover >a{
   opacity: 1;
 }
 
+a {
+  font-family: var(--headerFont);
+}
+
 .internal {
   background-color: transparent;
 }
@@ -47,6 +80,7 @@ code {
   background-color: var(--lightgray);
   border: 1px, solid, var(--gray);
   transition: border-color 0.2 ease;
+  font-size: .85rem;
 }
 
 .search>.search-button {
