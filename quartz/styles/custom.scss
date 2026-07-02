@@ -58,17 +58,17 @@ code {
 }
 
 .graph>.graph-outer>.global-graph-icon {
-    cursor: pointer;
-    color: var(--dark-gray);
-    opacity: 1;
-    background: 0 0;
-    border: none;
-    width: 24px;
-    height: 24px;
-    margin: 0;
-    padding: .1rem;
-    transition: background-color .5s;
-    position: relative;
+  cursor: pointer;
+  color: var(--dark-gray);
+  opacity: 1;
+  background: 0 0;
+  border: none;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  padding: .1rem;
+  transition: background-color .5s;
+  position: relative;
 }
 
 .folder-container div>a{
@@ -94,13 +94,13 @@ code {
 }
 
 footer {
-    opacity: .7;
-    align-content: center;
-    justify-items: center;
-    margin: 2rem 0 4rem;
-    display: grid;
-    grid-template-rows: 30px 30px;
-    align-items: center;
+  opacity: .7;
+  align-content: center;
+  justify-items: center;
+  margin: 2rem 0 4rem;
+  display: grid;
+  grid-template-rows: 30px 30px;
+  align-items: center;
 }
 
 footer ul {
@@ -129,6 +129,7 @@ footer ul {
 .sidebar {
   @media all and ($mobile) {
     position: relative;
+    background-color: transparent;
   }
 }
 
