@@ -47,7 +47,7 @@ cat /etc/incron.d/* # see all the active incron tasks
 ```
 
 Format:
-```
+```txt
 path_to_watch event command_to_execute parameter (optional)
 ```
 
@@ -74,7 +74,7 @@ getcap file # capabilities of a specific file
 ```
 
 Format:
-```
+```txt
 /file capabilitie=flags
 ```
 

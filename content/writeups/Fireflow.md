@@ -52,7 +52,7 @@ redoc                   [Status: 200, Size: 889]
 
 Download it and open it in [Swagger Editor](https://editor.swagger.io/)
 
-```
+```bash
 [hvidal@fedora] ~/d/h/h/m/f/content
 ❯ wget --no-check-certificate https://flow.fireflow.htb/openapi.json
 ```
