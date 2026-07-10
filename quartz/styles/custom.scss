@@ -59,6 +59,40 @@ body, .center, code {
   transition: var(--transition);
 }
 
+body {
+  background:
+    linear-gradient(
+    90deg,
+    var(--light) 0%,
+    transparent 50%,
+    var(--light) 100%
+    ),
+
+    linear-gradient(var(--highlight) 1px, transparent 1px),
+    linear-gradient(90deg, var(--highlight) 1px, transparent 1px)
+
+    var(--light);
+
+  background-size: auto, 50px 50px, 50px 50px;
+
+  background-attachment: fixed;
+}
+
+.center {
+  padding: 20px;
+  margin: 0;
+  margin-top: 15px;
+
+  border-radius: 10px;
+
+  background-color: var(--darker);
+  box-shadow: 0px 0px 19px 1px var(--shadow);
+
+  @media all and ($desktop) {
+    margin-top: 70px;
+  }
+}
+
 li:hover >a{
   color: var(--tertiary);
   opacity: 1;
@@ -120,20 +154,6 @@ code {
 
 .page-header {
   margin-top: 0px;
-}
-
-.center {
-  padding: 20px;
-  margin: 0;
-  border-radius: 10px;
-  background-color: var(--darker);
-  box-shadow: 0px 0px 19px 1px var(--shadow);
-  margin-top: 15px;
-
-  @media all and ($desktop) {
-    margin-top: 70px;
-  }
-
 }
 
 footer {
