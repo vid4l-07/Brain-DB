@@ -39,7 +39,12 @@
   "sideEffects": false,
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch"
+    "dev": "tsup --watch",
+    "lint": "eslint . --max-warnings=0",
+    "format": "prettier . --check",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run typecheck && npm run lint && npm run format && npm run test"
   },
   "peerDependencies": {
     "preact": "^10.0.0"
@@ -56,15 +61,21 @@
   "devDependencies": {
     "@types/mdast": "^4.0.4",
     "@types/node": "^24.10.0",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
     "github-slugger": "^2.0.0",
     "mdast": "^3.0.0",
     "mdast-util-to-string": "^4.0.0",
     "preact": "^10.28.2",
+    "prettier": "^3.6.2",
     "sass": "^1.97.3",
     "tsup": "^8.5.0",
     "typescript": "^5.9.3",
     "unist-util-visit": "^5.0.0",
-    "vfile": "^6.0.3"
+    "vfile": "^6.0.3",
+    "vitest": "^2.1.9"
   },
   "engines": {
     "node": ">=22",
