@@ -217,7 +217,8 @@ plugins:
       position: left
       priority: 50
       display: desktop-only
-  - source: github:quartz-community/table-of-contents
+  # - source: github:quartz-community/table-of-contents
+  - source: ./my-plugins/table-of-contents
     enabled: true
     order: 50
     layout:
