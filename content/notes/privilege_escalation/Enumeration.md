@@ -38,7 +38,7 @@ cat /etc/crontab
 ```
 
 ## Systemd scheduled tasks
-```
+```bash
 systemctl list-timers
 ```
 

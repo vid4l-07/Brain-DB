@@ -64,7 +64,7 @@ plugins:
     enabled: true
     options:
       theme:
-        light: catppuccin-latte
+        light: catppuccin-mocha # catppuccin-latte
         dark: catppuccin-mocha
       keepBackground: false
     order: 20
@@ -192,7 +192,7 @@ plugins:
       groupOptions:
         grow: true
   - source: github:quartz-community/darkmode
-    enabled: true
+    enabled: false
     layout:
       position: right
       priority: 20
