@@ -102,6 +102,17 @@ a {
   font-family: var(--headerFont);
 }
 
+.toc {
+  margin-right: 15px;
+}
+
+.toc-content >li >a {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .internal {
   background-color: transparent;
 }
@@ -177,6 +188,7 @@ footer ul {
 
 .page>#quartz-body {
   justify-items: center;
+  gap: 25px;
 
   @media all and ($tablet) {
     margin-top: 45px;
@@ -190,6 +202,9 @@ footer ul {
 }
 
 .sidebar {
+  width: 100% !important;
+  padding: 6rem 3rem 2rem !important;
+
   @media all and ($mobile) {
     position: relative;
     background-color: transparent;
