@@ -1,17 +1,15 @@
-#medium #htb
+#medium #htb #subdomains #langflow #cve-2025-3248 #rce #openapi #api #env-leak #mcp #jwt #kubernetes #kubelet #rbac
 # Enumeration
 ## Nmap
 
 ```bash
 [hvidal@fedora] ~/d/h/h/m/f/scan
 ❯ sudo nmap -p- --open -vvv --min-rate 5000 -n -Pn 10.129.32.28 -oG scan 
-PORT    STATE SERVICE REASON
-22/tcp  open  ssh     syn-ack ttl 63
-443/tcp open  https   syn-ack ttl 63
+Discovered open port 22/tcp on 10.129.32.28
+Discovered open port 443/tcp on 10.129.32.28
 ```
 
 Ports 22 and 443 are open.
-
 ```bash
 [hvidal@fedora] ~/d/h/h/m/f/scan
 ❯ nmap -p 22,443 -sCV 10.129.32.28 -oN portscan.txt -Pn
@@ -31,7 +29,8 @@ flow.fireflow.htb            [Status: 200, Size: 950]
 
 Add `fireflow.htb` and `flow.fireflow.htb` to `/etc/hosts`.
 ```bash
-echo "10.129.32.28 fireflow.htb flow.fireflow.htb" | sudo tee -a /etc/hosts
+[hvidal@fedora] ~/d/h/h/m/f/scan
+❯ echo "10.129.32.28 fireflow.htb flow.fireflow.htb" | sudo tee -a /etc/hosts
 ```
 
 ## Directories
@@ -57,7 +56,7 @@ Download it and open it in [Swagger Editor](https://editor.swagger.io/)
 ❯ wget --no-check-certificate https://flow.fireflow.htb/openapi.json
 ```
 
-We found that the endpoint `/api/v1/build_public_tmp/{flow_id}/flow` doesn't require authentication and is vulnerable ([CVE-2025-3248](https://github.com/langflow-ai/langflow/security/advisories/GHSA-vwmf-pq79-vjvx)).
+We found that the endpoint `/api/v1/build_public_tmp/{flow_id}/flow` doesn't require authentication and is vulnerable to [CVE-2025-3248](https://github.com/langflow-ai/langflow/security/advisories/GHSA-vwmf-pq79-vjvx).
 
 # Exploitation
 

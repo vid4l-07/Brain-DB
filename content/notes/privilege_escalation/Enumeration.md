@@ -24,7 +24,7 @@ find / -perm -2000 -type f 2>/dev/null
 ## Writable files
 
 ```bash
-find / -writable 2>/dev/null | grep -v "sys\|proc\|opt\|var\|run\|dev"
+find / -writable 2>/dev/null | grep -v "sys\|proc\|opt\|var\|run\|dev\|tmp"
 ```
 
 # Tasks
@@ -35,6 +35,11 @@ Scheduled tasks
 ```bash
 crontab -l
 cat /etc/crontab
+```
+
+## Systemd scheduled tasks
+```
+systemctl list-timers
 ```
 
 ## Incron

