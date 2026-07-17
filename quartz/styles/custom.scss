@@ -52,7 +52,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 html {
-  font-size: 14px;
+  font-size: 15px;
 }
 
 body, .center, code {
@@ -76,6 +76,24 @@ body {
   background-size: auto, 50px 50px, 50px 50px;
 
   background-attachment: fixed;
+}
+
+ul::-webkit-scrollbar {
+  display: none;
+  width: 4px;
+}
+ul::-webkit-scrollbar-track {
+  background: transparent;
+}
+ul::-webkit-scrollbar-thumb {
+  background: var(--lightgray);
+  border-radius: 5px;
+}
+ul::-webkit-scrollbar-thumb:hover {
+  background: var(--gray);
+}
+ul:hover::-webkit-scrollbar {
+  display: block;
 }
 
 .center {
