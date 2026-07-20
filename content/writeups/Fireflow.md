@@ -1,4 +1,4 @@
-#medium #htb #subdomains #langflow #cve-2025-3248 #rce #openapi #api #env-leak #mcp #jwt #kubernetes #kubelet #rbac
+#medium #htb #subdomains #langflow #cve-2025-3248 #rce #openapi #api #env-leak #mcp #port-forwarding #jwt #kubernetes #kubelet #rbac
 # Enumeration
 ## Nmap
 

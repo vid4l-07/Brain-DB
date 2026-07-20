@@ -31,13 +31,13 @@ find / -writable 2>/dev/null | grep -v "sys\|proc\|opt\|var\|run\|dev\|tmp"
 ## Cron
 
 Scheduled tasks
-
 ```bash
 crontab -l
 cat /etc/crontab
 ```
 
 ## Systemd scheduled tasks
+
 ```bash
 systemctl list-timers
 ```
@@ -74,7 +74,7 @@ Parameters: incron replaces the parameter with a file path:
 Capabilities split the traditional root privileges. Instead of full root access, processes can be granted only the privileges they need (binding ports, changing file ownership, etc.)
 
 ```bash
-getcap -r / # recursive search
+getcap -r / 2> /dev/null # recursive search
 getcap file # capabilities of a specific file
 ```
 
