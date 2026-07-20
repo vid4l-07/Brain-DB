@@ -1,66 +1,76 @@
-# Deficinicion
-Sistema de orquestacion de gestion de contenedores.
+# Definition
 
-## Arquitectura
--  Cluster: Instancia de Kubernetes.
-- Control Plane: Cerebro del cluster.
-- Nodes: maquinas que ejecutan trabajos.
+Container orchestration management system.
+
+## Architecture
+
+* Cluster: Kubernetes instance.
+* Control Plane: The brain of the cluster.
+* Nodes: Machines that run services.
 
 ![](kubernetes_diagram.svg)
 
-### Control plane
-Expone la API para solicitudes internas y externas y mantiene el estado global.
-- **Kube-apiserver**:
-	- Comunica usuarios y nodos (accesible desde dentro y fuera del Pod).
-- **ETCD**: 
-	- Base de datos que  almacena el estado del Cluster.
-- **Kube-scheduler**: 
-	- Decide en que Nodo se ejecuta cada Pod
-- **Kube-controller-manager**: 
-	- Mantiene el estado deseado.
+### Control Plane
 
-### Nodos
-Maquinas virtuales que ejecutan cada servicio.
-- **Pod**: 
-	- Donde se despliegan los contenedores (docker, containerd...).
-	- Uno o varios contenedores compartiendo red y almacenamiento.
-- **Kubelet**:
-	- Recive instrucciones del API server 
-	- Mantiene los Pods en el estado deseado.
-- **Kube-proxy**: 
-	- Recibe reglas de red y servicios que exponen el Pod.
-- **iptables**: 
-	- Aplica las reglas de red de Kube-proxy.
+Exposes the API for internal and external requests and maintains the global state.
+* **Kube-apiserver**:
+  * Communicates with users and nodes (accessible from inside and outside the Pod).
+* **ETCD**:
+  * Database that stores the Cluster state.
+* **Kube-scheduler**:
+  * Decides which Node each Pod runs on.
+* **Kube-controller-manager**:
+  * Maintains the desired state.
 
-# Funcionamiento
+### Nodes
 
-Flujo de “identidad → autorización → acción”:
-1. **Cliente (kubectl / pod / service account)** se autentica contra el API server
-2. Recibe acceso basado en token (similar a ticket)
-3. El API server valida:
-    - Autenticación
-    - Autorización (RBAC)
-4. Se guarda el estado en etcd
-5. Scheduler asigna nodo
-6. Kubelet ejecuta el Pod
+Virtual machines that run each service.
+* **Pod**:
+  * Where containers are deployed (Docker, containerd...).
+  * One or more containers sharing network and storage.
+* **Kubelet**:
+  * Receives instructions from the API server.
+  * Keeps Pods in the desired state.
+* **Kube-proxy**:
+  * Receives network rules and services that expose the Pod.
+* **iptables**:
+  * Applies the network rules from Kube-proxy.
 
-Si un Pod falla → se recrea automáticamente (ReplicaSet / Deployment)
-Si un nodo cae → el scheduler reubica Pods
+# How It Works
 
-# Enumeración
+"Identity → Authorization → Action" flow:
 
-## Token dentro de un Pod
+1. **Client (kubectl / pod / service account)** authenticates with the API server.
+2. Receives token-based access (similar to a ticket).
+3. The API server validates:
+   * Authentication
+   * Authorization (RBAC)
+4. The state is stored in etcd.
+5. The Scheduler assigns a node.
+6. Kubelet runs the Pod.
+
+If a Pod fails → it is automatically recreated (ReplicaSet / Deployment).
+If a node fails → the Scheduler reschedules Pods.
+
+# Enumeration
+
+## Token Inside a Pod
+
 ```bash
 ls /var/run/secrets/kubernetes.io/serviceaccount/
 ```
-Archivos típicos:
-- token → JWT de acceso
-- ca.crt → certificado del cluster
-- namespace → namespace actual
+
+Typical files:
+* token → Access JWT
+* ca.crt → Cluster certificate
+* namespace → Current namespace
+
 ## API
-Para enumerar la API se usa `curl` por GET.
+The API can be enumerated using `curl` with GET requests.
+
 ### API Groups
-Devuelve una lista de API groups disponibles:
+
+Returns a list of available API groups:
 
 ```json
 $ curl -X GET -k -H "Authorization: Bearer $TOKEN" https://10.43.0.1:443/apis/
@@ -83,26 +93,33 @@ $ curl -X GET -k -H "Authorization: Bearer $TOKEN" https://10.43.0.1:443/apis/
     }, ...
 ```
 
-Core API entry points;
-- `/api`: Core API group
-	- No hay API groups
-	- Core resources (pods, services, nodes, etc.)
-- `/apis`: Extended API groups
-	- Siempre hay API groups
-- `/logs`
-- `/exec`
-- `/proxy`
+Core API entry points:
 
-API groups comunes:
-- `rbac.authorization.k8s.io/v1`: Control de acceso basado en roles.
-	- `roles`: Permisos en un namespace.
-	- `relebindings`: Asignación de roles a usuarios.
-	- `clusterroles`: Asignación global.
-- `authorization.k8s.io/v1`: Evaluación de permisos en tiempo real.
-	- `selfsubjectrulesreviews`: Permisos del token.
-	- `subjectaccessreviews`: Verifica permiso de otro usuario.
-	- `selfsubjectaccessreviews`: Verifica permiso especifico.
-### Recursos
+* `/api`: Core API group
+  * No API groups
+  * Core resources (pods, services, nodes, etc.)
+  
+* `/apis`: Extended API groups
+  * API groups are always present
+  
+* `/logs`
+* `/exec`
+* `/proxy`
+
+Common API groups:
+
+* `rbac.authorization.k8s.io/v1`: Role-based access control.
+  * `roles`: Permissions in a namespace.
+  * `rolebindings`: Assigns roles to users.
+  * `clusterroles`:  Global role assignments.
+  
+* `authorization.k8s.io/v1`: Real-time permission evaluation.
+  * `selfsubjectrulesreviews`: Token's permissions.
+  * `subjectaccessreviews`: Checks another user's permissions.
+  * `selfsubjectaccessreviews`: Checks a specific permission.
+
+### Resources
+
 ```json
 $ curl -k -X GET -H "Authorization: Bearer $TOKEN" https://10.43.0.1:443/apis/rbac.authorization.k8s.io/v1
 {
@@ -111,7 +128,7 @@ $ curl -k -X GET -H "Authorization: Bearer $TOKEN" https://10.43.0.1:443/apis/rb
       "namespaced": false,
       "kind": "ClusterRole",
       "verbs": [
-        "create",     # POST
+        "create",     // POST
         "delete",
         "deletecollection",
         "get",
@@ -124,18 +141,19 @@ $ curl -k -X GET -H "Authorization: Bearer $TOKEN" https://10.43.0.1:443/apis/rb
     }, ...
 ```
 
-Expone recursos como `.../clusterroles, .../roles, etc.` Estos admiten requests por todos los métodos del array `verbs`.
+Exposes resources such as `.../clusterroles`, `.../roles`, etc. These support requests using all methods listed in the `verbs` array.
 
->[!note]
->create == POST
+> [!note]
+> create == POST
 
 ### POST request
 
-Minima data:
+Minimum data:
+
 ```json
 {
   "apiVersion": "<API group>/<version>",
-  "kind": "<kind del recurso>",
+  "kind": "<resource kind>",
   "spec": {
     "namespace": "default"
   }
