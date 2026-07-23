@@ -131,6 +131,19 @@ a {
   text-overflow: ellipsis;
 }
 
+.folder-container>div {
+    min-width: 0;
+}
+
+.folder-button,
+.nav-file-title{
+    width: 100%;
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 .internal {
   background-color: transparent;
 }
@@ -225,6 +238,12 @@ footer ul {
   justify-items: center;
   gap: 25px;
 
+  @media all and ($desktop) {
+    grid-template:
+    "grid-sidebar-left grid-header grid-sidebar-right"
+    "grid-sidebar-left grid-center grid-sidebar-right"
+    "grid-sidebar-left grid-footer grid-sidebar-right" / 250px auto 250px;
+  }
   @media all and ($tablet) {
     margin-top: 45px;
   }
