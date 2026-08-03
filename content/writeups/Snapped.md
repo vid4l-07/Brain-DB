@@ -1,4 +1,4 @@
-#in-progress #hard #htb #subdomains #nginx-ui #cve-2026-27944 #backup #decryption #sqlite #bcrypt  #cve-2026-3888 #toctou #race-condition
+#in-progress #hard #linux #htb #subdomains #nginx-ui #cve-2026-27944 #backup #decryption #sqlite #bcrypt  #cve-2026-3888 #toctou #race-condition
 # Enumeration
 ## Nmap
 

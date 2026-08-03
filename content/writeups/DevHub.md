@@ -1,4 +1,4 @@
-#htb #medium #mcp #mcp-jam #cve-2026-23744 #api #rce #port-forwarding #chisel #jupyter #process-enumeration #token-leak #flask #api-key-leak #ssh-keys
+#htb #medium #linux #mcp #mcp-jam #cve-2026-23744 #api #rce #port-forwarding #chisel #jupyter #process-enumeration #token-leak #flask #api-key-leak #ssh-keys
 
 # Enumeration
 ## Nmap

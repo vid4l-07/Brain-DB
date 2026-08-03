@@ -27,12 +27,19 @@ find / -perm -2000 -type f 2>/dev/null
 find / -writable 2>/dev/null | grep -v "sys\|proc\|opt\|var\|run\|dev\|tmp"
 ```
 
+## Group-writable files
+
+```bash
+find / -group <group> -perm -g=w 2>/dev/null
+```
+
 # Tasks
 ## Cron
 
 Scheduled tasks
 ```bash
 crontab -l
+ls -R /etc/cron*
 cat /etc/crontab
 ```
 

@@ -1,4 +1,4 @@
-#htb #easy #subdomains #gitea #env-leak #credentials-reuse #krayin #cve-2026-38526 #file-upload #systemd-timers #git #path-traversal
+#htb #easy #linux #subdomains #gitea #env-leak #credentials-reuse #krayin #cve-2026-38526 #file-upload #systemd-timers #git #path-traversal
 
 # Enumeration
 ## Nmap

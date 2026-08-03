@@ -1,4 +1,4 @@
-#easy #htb #freepbx #cve-2025-57819 #sqli #cron #rce #writable-config #incron
+#easy #htb #linux #freepbx #cve-2025-57819 #sqli #cron #rce #writable-config #incron
 # Enumeration
 ## Nmap
 
