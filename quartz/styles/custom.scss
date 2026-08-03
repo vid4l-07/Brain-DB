@@ -211,6 +211,20 @@ li.section-li>.section {
   font-size: 1rem;
 }
 
+.folder-container>div,
+.folder-container>div>a{
+  min-width: 0;
+  max-width: 100%;
+}
+
+.folder-title,
+.nav-file-title {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .page-header {
   margin-top: 0px;
 }
