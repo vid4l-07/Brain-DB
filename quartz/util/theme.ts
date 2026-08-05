@@ -180,7 +180,7 @@ ${stylesheet.join("\n\n")}
 :root {
   --light: ${theme.colors.darkMode.light};
   --lightgray: ${theme.colors.darkMode.lightgray};
-  --darker: #1e222a;
+  --darker: ${theme.colors.darkMode.darker};
   --gray: ${theme.colors.darkMode.gray};
   --darkgray: ${theme.colors.darkMode.darkgray};
   --dark: ${theme.colors.darkMode.dark};
@@ -188,7 +188,9 @@ ${stylesheet.join("\n\n")}
   --tertiary: ${theme.colors.darkMode.tertiary};
   --highlight: ${theme.colors.darkMode.highlight};
   --textHighlight: ${theme.colors.darkMode.textHighlight};
-  --shadow: rgba(0,0,0,0.21);
+  --shadow: ${theme.colors.darkMode.shadow};
+  --selection_bg: ${theme.colors.darkMode.selection_bg};
+  --selection_fg: ${theme.colors.darkMode.selection_fg};
 
   --titleFont: "${getFontSpecificationName(theme.typography.title || theme.typography.header)}", ${DEFAULT_SANS_SERIF};
   --headerFont: "${getFontSpecificationName(theme.typography.header)}", ${DEFAULT_SANS_SERIF};
@@ -199,7 +201,7 @@ ${stylesheet.join("\n\n")}
 :root[saved-theme="light"] {
   --light: ${theme.colors.lightMode.light};
   --lightgray: ${theme.colors.lightMode.lightgray};
-  --darker: #f2f1f5;
+  --darker: ${theme.colors.lightMode.darker};
   --gray: ${theme.colors.lightMode.gray};
   --darkgray: ${theme.colors.lightMode.darkgray};
   --dark: ${theme.colors.lightMode.dark};
@@ -207,7 +209,9 @@ ${stylesheet.join("\n\n")}
   --tertiary: ${theme.colors.lightMode.tertiary};
   --highlight: ${theme.colors.lightMode.highlight};
   --textHighlight: ${theme.colors.lightMode.textHighlight};
-  --shadow: rgba(100,100,100,0.21);
+  --shadow: ${theme.colors.lightMode.shadow};
+  --selection_bg: ${theme.colors.lightMode.selection_bg};
+  --selection_fg: ${theme.colors.lightMode.selection_fg};
 }
 
 :root {
