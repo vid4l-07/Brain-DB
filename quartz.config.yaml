@@ -69,8 +69,8 @@ plugins:
     enabled: true
     options:
       theme:
-        light: catppuccin-mocha # catppuccin-latte
-        dark: catppuccin-mocha
+        light: catppuccin-macchiato # catppuccin-latte
+        dark:  catppuccin-macchiato
       keepBackground: false
     order: 20
   - source: github:quartz-community/obsidian-flavored-markdown

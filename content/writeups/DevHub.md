@@ -90,7 +90,7 @@ Send a POST request to the `/api/mcp/connect` endpoint with the Base64-encoded r
 # Lateral movement
 
 `devhub.htb` reveals that an application is running on `localhost:8888`.
-Use [chisel](https://github.com/jpillora/chisel) to forward the service to the attacker's machine.
+Use [[chisel|chisel]] to forward the service to the attacker's machine.
 
 ## Port forwarding
 
