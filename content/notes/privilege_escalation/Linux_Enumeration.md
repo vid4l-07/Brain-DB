@@ -92,7 +92,7 @@ Parameters: incron replaces the parameter with a file path:
 
 # Capabilities
 
-Capabilities split the traditional root privileges. Instead of full root access, processes can be granted only the privileges they need (binding ports, changing file ownership, etc.)
+Capabilities split the traditional root privileges. Instead of full root access, processes can be granted only the privileges they need.
 
 ```bash
 getcap -r / 2> /dev/null # recursive search
@@ -104,7 +104,7 @@ Format:
 /file capabilitie=flags
 ```
 
-Common:
+Dangerous:
 - `CAP_NET_ADMIN`: allows network configuration changes.
 - `CAP_NET_BIND_SERVICE`: allows binding to ports below 1024.
 - `CAP_DAC_OVERRIDE`: bypasses file permissions (can read/write/execute all files).

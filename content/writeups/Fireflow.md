@@ -315,7 +315,7 @@ Execute the tool via the `/mcp` endpoint.
 ## Kubernetes
 ### Enumeration
 
-The IP of the [[Kubernetes]] API is exposed in the environment variables.
+The IP of the [[Kubernetes|Kubernetes]] API is exposed in the environment variables.
 ```bash
 $ env
 KUBERNETES_PORT=tcp://10.43.0.1:443

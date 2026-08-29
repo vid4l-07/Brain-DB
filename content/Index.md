@@ -1,8 +1,8 @@
 Check my knowledge
 ## Content
 
-- [[notes|Notes]]  
 - [[writeups|Writeups]] 
+- [[notes|Notes]]  
 
 ---
 

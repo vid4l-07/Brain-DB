@@ -4,36 +4,36 @@ Container orchestration management system.
 
 ## Architecture
 
-* Cluster: Kubernetes instance.
-* Control Plane: The brain of the cluster.
-* Nodes: Machines that run services.
+- Cluster: Kubernetes instance.
+- Control Plane: The brain of the cluster.
+- Nodes: Machines that run services.
 
 ![](kubernetes_diagram.svg)
 
 ### Control Plane
 
 Exposes the API for internal and external requests and maintains the global state.
-* **Kube-apiserver**:
+- **Kube-apiserver**:
   * Communicates with users and nodes (accessible from inside and outside the Pod).
-* **ETCD**:
+- **ETCD**:
   * Database that stores the Cluster state.
-* **Kube-scheduler**:
+- **Kube-scheduler**:
   * Decides which Node each Pod runs on.
-* **Kube-controller-manager**:
+- **Kube-controller-manager**:
   * Maintains the desired state.
 
 ### Nodes
 
 Virtual machines that run each service.
-* **Pod**:
+- **Pod**:
   * Where containers are deployed (Docker, containerd...).
   * One or more containers sharing network and storage.
-* **Kubelet**:
+- **Kubelet**:
   * Receives instructions from the API server.
   * Keeps Pods in the desired state.
-* **Kube-proxy**:
+- **Kube-proxy**:
   * Receives network rules and services that expose the Pod.
-* **iptables**:
+- **iptables**:
   * Applies the network rules from Kube-proxy.
 
 # How It Works
@@ -61,9 +61,9 @@ ls /var/run/secrets/kubernetes.io/serviceaccount/
 ```
 
 Typical files:
-* token → Access JWT
-* ca.crt → Cluster certificate
-* namespace → Current namespace
+- token → Access JWT
+- ca.crt → Cluster certificate
+- namespace → Current namespace
 
 ## API
 The API can be enumerated using `curl` with GET requests.
@@ -95,25 +95,25 @@ $ curl -X GET -k -H "Authorization: Bearer $TOKEN" https://10.43.0.1:443/apis/
 
 Core API entry points:
 
-* `/api`: Core API group
+- `/api`: Core API group
   * No API groups
   * Core resources (pods, services, nodes, etc.)
   
-* `/apis`: Extended API groups
+- `/apis`: Extended API groups
   * API groups are always present
   
-* `/logs`
-* `/exec`
-* `/proxy`
+- `/logs`
+- `/exec`
+- `/proxy`
 
 Common API groups:
 
-* `rbac.authorization.k8s.io/v1`: Role-based access control.
+- `rbac.authorization.k8s.io/v1`: Role-based access control.
   * `roles`: Permissions in a namespace.
   * `rolebindings`: Assigns roles to users.
   * `clusterroles`:  Global role assignments.
   
-* `authorization.k8s.io/v1`: Real-time permission evaluation.
+- `authorization.k8s.io/v1`: Real-time permission evaluation.
   * `selfsubjectrulesreviews`: Token's permissions.
   * `subjectaccessreviews`: Checks another user's permissions.
   * `selfsubjectaccessreviews`: Checks a specific permission.
