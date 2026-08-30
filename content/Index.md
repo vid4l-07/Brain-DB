@@ -3,6 +3,7 @@ Check my knowledge
 
 - [[writeups|Writeups]] 
 - [[notes|Notes]]  
+- [[programming|Programming]]
 
 ---
 

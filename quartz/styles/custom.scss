@@ -78,6 +78,10 @@ body {
   background-attachment: fixed;
 }
 
+tbody, li, p {
+    line-height: 1.7rem;
+}
+
 ul::-webkit-scrollbar {
   display: none;
   width: 4px;
