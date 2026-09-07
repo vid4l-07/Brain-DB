@@ -2,7 +2,7 @@ Check my knowledge
 ## Content
 
 - [[writeups|Writeups]] 
-- [[notes|Notes]]  
+- [[pentesting|Pentesting notes]]  
 - [[programming|Programming]]
 
 ---
