@@ -6,8 +6,7 @@ configuration:
   enablePopovers: true
   analytics:
     provider: google
-    config:
-      measurementId: G-DG0QGK2YMX
+    tagId: G-DG0QGK2YMX
   locale: en-US
   baseUrl: vid4l-07.github.io/Brain-DB
   ignorePatterns:
