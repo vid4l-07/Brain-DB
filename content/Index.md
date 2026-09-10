@@ -1,4 +1,4 @@
-Check my knowledge
+My knowledge
 ## Content
 
 - [[writeups|Writeups]] 

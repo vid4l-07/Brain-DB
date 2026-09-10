@@ -34,7 +34,10 @@ import math_utils as mu              # alias
 > [!warning]
 > Avoid `from module import *`. It pollutes the namespace and makes it hard to know where names come from.
 
-# __name__
+# Special variables
+
+Python modules have several special (dunder) variables that provide metadata about the module.
+## __name__
 
 Every module has a `__name__` variable. It equals `"__main__"` when the file is run directly, and the module name when imported.
 
@@ -51,6 +54,59 @@ if __name__ == "__main__":
 > [!tip]
 > Use `if __name__ == "__main__":` to write code that runs both as a script and as an importable module.
 
+| Scenario                             | `__name__` value |
+| ------------------------------------ | ---------------- |
+| Run directly: `python math_utils.py` | `"__main__"`     |
+| Imported: `import math_utils`        | `"math_utils"`   |
+
+## __file__
+
+Contains the path of the current module file:
+
+```python
+# math_utils.py
+print(__file__)   # "/home/user/project/math_utils.py"
+```
+
+> [!note]
+> `__file__` is not defined in the interactive interpreter or in modules loaded by the C runtime (like `sys`).
+
+## __all__
+
+Controls what is exported with `from module import *`:
+
+```python
+# math_utils.py
+__all__ = ["add", "subtract"]
+
+def add(a, b):
+    return a + b
+
+def subtract(a, b):
+    return a - b
+
+def internal_func():    # not exported
+    pass
+```
+
+```python
+from math_utils import *   # only imports add and subtract
+```
+
+> [!tip]
+> Always define `__all__` in modules that might be imported with `from module import *`. It makes the public API explicit.
+
+## __version__
+
+Not built-in by convention, but widely used for versioning:
+
+```python
+# math_utils.py
+__version__ = "1.2.0"
+
+# You can also read it from pyproject.toml or importlib.metadata
+```
+
 # Packages
 
 A package is a directory with an `__init__.py` file. It groups related modules.
@@ -64,19 +120,20 @@ my_project/
     └── string_utils.py
 ```
 
+# \_\_init\_\_.py
+
+`__init__.py` controls what is exported when the package is imported. It can be empty or define `__all__`:
+
 ```python
 # utils/__init__.py
-from .math_utils import add
-from .string_utils import capitalize_words
+__all__ = ["add", "subtract"]
+
+from .math_utils import add, subtract
+from .string_utils import capitalize_words   # not exported by default
 ```
 
-```python
-# main.py
-from utils import add, capitalize_words
-
-add(3, 4)                        # 7
-capitalize_words("hello world")  # "Hello World"
-```
+> [!note]
+> If `__init__.py` is empty, all modules in the directory are still importable. It mainly exists to mark the directory as a package.
 
 # Relative imports
 
@@ -96,41 +153,12 @@ def sum_and_capitalize(a, b):
     return str(add(a, b)).upper()
 ```
 
-| Syntax | Meaning |
-|--------|---------|
-| `from . import module` | Same package |
-| `from .. import module` | Parent package |
+| Syntax                     | Meaning                         |
+| -------------------------- | ------------------------------- |
+| `from . import module`     | Same package                    |
+| `from .. import module`    | Parent package                  |
 | `from .module import func` | Specific name from same package |
 
 > [!warning]
 > Relative imports only work inside packages. They do not work in top-level scripts.
 
-# __init__.py
-
-`__init__.py` controls what is exported when the package is imported. It can be empty or define `__all__`:
-
-```python
-# utils/__init__.py
-__all__ = ["add", "subtract"]
-
-from .math_utils import add, subtract
-from .string_utils import capitalize_words   # not exported by default
-```
-
-> [!note]
-> If `__init__.py` is empty, all modules in the directory are still importable. It mainly exists to mark the directory as a package.
-
-# Standard library highlights
-
-| Module        | Description                             |
-| ------------- | --------------------------------------- |
-| `os`          | File system, environment variables      |
-| `sys`         | System parameters, `sys.path`           |
-| `math`        | Math functions (`sqrt`, `sin`, `pi`)    |
-| `datetime`    | Dates and times                         |
-| `json`        | JSON parsing and serialization          |
-| `re`          | Regular expressions                     |
-| `pathlib`     | Modern file path handling               |
-| `collections` | `deque`, `Counter`, `namedtuple`        |
-| `itertools`   | Iteration tools (`chain`, `product`)    |
-| `functools`   | `reduce`, `lru_cache`, `total_ordering` |

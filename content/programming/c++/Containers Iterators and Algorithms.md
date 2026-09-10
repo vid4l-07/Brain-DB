@@ -2,14 +2,14 @@
 
 The STL provides containers for storing data collections. The most common ones:
 
-| Container            | Description                                   |
-| -------------------- | --------------------------------------------- |
-| `std::vector`        | Dynamic array (with fast index access)        |
-| `std::deque`         | Double-ended queue, fast from both ends       |
-| `std::list`          | Doubly linked list (fast insertion)           |
-| `std::map`           | Key→value pairs sorted by key                 |
-| `std::unordered_map` | Key→value pairs (hash, unordered)             |
-| `std::set`           | Ordered set (no duplicates)                   |
+| Container            | Description                             |
+| -------------------- | --------------------------------------- |
+| `std::vector`        | Dynamic array (with fast index access)  |
+| `std::deque`         | Double-ended queue, fast from both ends |
+| `std::list`          | Doubly linked list (fast insertion)     |
+| `std::map`           | Key→value pairs sorted by key           |
+| `std::unordered_map` | Key→value pairs (hash, unordered)       |
+| `std::set`           | Ordered set (no duplicates)             |
 
 All share a similar API to `std::vector` (`size`, `begin`, `end`, etc.).
 

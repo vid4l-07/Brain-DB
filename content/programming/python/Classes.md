@@ -87,11 +87,103 @@ movie2.genre   # "drama"
 > [!warning]
 > If you modify a class attribute through an instance, it creates a **new instance attribute** that shadows the class attribute. Always modify class attributes through the class name.
 
-# Special methods (dunder)
+# Dunder
 
-Special methods are defined with the `__name__` pattern. They let your classes interact with Python's built-in functions and operators.
+Dunder is a Python term for names surrounded by double underscores.
+## Special attributes
 
-## Common special methods
+Python objects have built-in attributes that provide metadata about the object or class. These are not methods, they are properties or classes.
+
+### Instance attributes
+
+```python
+class Movie:
+    def __init__(self, title, year):
+        self.title = title
+        self.year = year
+
+movie = Movie("Inception", 2010)
+```
+
+| Attribute    | Description                       | Example                                                   |
+| ------------ | --------------------------------- | --------------------------------------------------------- |
+| `__class__`  | The class of the instance         | `movie.__class__` → `<class 'Movie'>`                     |
+| `__dict__`   | Dictionary of instance attributes | `movie.__dict__` → `{'title': 'Inception', 'year': 2010}` |
+| `__sizeof__` | Size in bytes                     | `movie.__sizeof__()` → `48`                               |
+
+```python
+movie = Movie("Inception", 2010)
+
+movie.__class__          # <class '__main__.Movie'>
+movie.__dict__           # {'title': 'Inception', 'year': 2010}
+isinstance(movie, Movie) # True (uses __class__)
+```
+
+> [!tip]
+> `__dict__` is useful for debugging or dynamically accessing all attributes. You can iterate over it like any dictionary.
+
+### Class attributes
+
+`<class 'name'>`
+
+```python
+class Movie:
+    genre = "drama"
+
+    def __init__(self, title):
+        self.title = title
+```
+
+| Attribute          | Description                 | Example                                                 |
+| ------------------ | --------------------------- | ------------------------------------------------------- |
+| `__name__`         | Name of the class           | `Movie.__name__` → `'Movie'`                            |
+| `__qualname__`     | Qualified name (with scope) | `Movie.__qualname__` → `'Movie'`                        |
+| `__module__`       | Module where defined        | `Movie.__module__` → `'__main__'`                       |
+| `__bases__`        | Tuple of parent classes     | `Movie.__bases__` → `(object,)`                         |
+| `__mro__`          | Method Resolution Order     | `Movie.__mro__` → `(<class 'Movie'>, <class 'object'>)` |
+| `__dict__`         | Class attribute dictionary  | `Movie.__dict__` → `mappingproxy({...})`                |
+| `__subclasses__()` | Direct subclasses (method)  | `Movie.__subclasses__()` → `[]`                         |
+
+```python
+class Movie:
+    genre = "drama"
+
+Movie.__name__          # 'Movie'
+Movie.__qualname__      # 'Movie'
+Movie.__module__        # '__main__'
+Movie.__bases__         # (<class 'object'>,)
+Movie.__dict__          # mappingproxy({'genre': 'drama', '__module__': '__main__', ...})
+```
+
+### __slots__
+
+`__slots__` restricts which attributes an instance can have. It saves memory and prevents typos in attribute names:
+
+```python
+class Movie:
+    __slots__ = ("title", "year")
+
+    def __init__(self, title, year):
+        self.title = title
+        self.year = year
+```
+
+```python
+movie = Movie("Inception", 2010)
+movie.title    # "Inception"
+movie.year     # 2010
+
+movie.genre = "action"   # AttributeError: 'Movie' object has no attribute 'genre'
+```
+
+> [!warning]
+> When using `__slots__`, you cannot add attributes not listed in `__slots__`. Also, `__dict__` is not created, which means some features (like `vars()`) won't work.
+
+## Special methods
+
+Special methods let your classes interact with Python's built-in functions and operators.
+
+### Common special methods
 
 | Method                   | Trigger                    | Description                                   |
 | ------------------------ | -------------------------- | --------------------------------------------- |
@@ -114,7 +206,9 @@ Special methods are defined with the `__name__` pattern. They let your classes i
 | `__del__`                | `del obj`                  | Destructor (when object is garbage collected) |
 | `__enter__` / `__exit__` | `with obj:`                | Context manager                               |
 
-## __str__ and __repr__
+### \_\_str\_\_ and \_\_repr\_\_
+
+`__str__` is for end users, `__repr__` is for developers. 
 
 ```python
 class Movie:
@@ -134,9 +228,9 @@ print(repr(movie))    # Movie('Inception', 2010)  → uses __repr__
 ```
 
 > [!tip]
-> `__str__` is for end users, `__repr__` is for developers. If you only implement one, implement `__repr__` — it is used as a fallback for `__str__`.
+> If you only implement one, implement `__repr__`, it is used as a fallback for `__str__`.
 
-## Comparison operators
+### Comparison operators
 
 ```python
 class Movie:
@@ -174,7 +268,7 @@ movie1 < movie2    # False
 >     def __lt__(self, other): return self.rating < other.rating
 > ```
 
-## Arithmetic operators
+### Arithmetic operators
 
 ```python
 class Vector:
@@ -204,7 +298,7 @@ v1 - v2    # Vector(-2, -2)
 v1 * 3     # Vector(3, 6)
 ```
 
-## Container methods
+### Container methods
 
 ```python
 class Playlist:
@@ -236,7 +330,7 @@ playlist[1] = "Song X"   # modifies index 1
 > [!note]
 > Implementing `__getitem__` makes the object iterable. You can then use `for song in playlist:` without implementing `__iter__`.
 
-## Context managers
+### Context managers
 
 ```python
 class FileManager:
@@ -258,4 +352,4 @@ with FileManager("data.txt", "w") as f:
 # file is automatically closed
 ```
 
-> Next: [[programming/python/Objects|Objects]]
+> Next: [[Decorators]]
