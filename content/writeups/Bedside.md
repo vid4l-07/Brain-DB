@@ -1,4 +1,4 @@
-#htb #medium #linux #subdomains #pdfminer #cve-2025-70559 #pickle #deserialization #pdf #rce #docker #container-escape #path-traversal #sudo #pytorch #pytorch-checkpoint #machine-learning
+#htb #medium #linux #web #subdomains #pdfminer #cve-2025-70559 #pickle #deserialization #pdf #rce #containers #docker #container-escape #path-traversal #sudo #pytorch #pytorch-checkpoint #machine-learning
 # Enumeration
 ## Nmap
 
