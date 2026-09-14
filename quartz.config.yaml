@@ -178,7 +178,7 @@ plugins:
     enabled: true
   - source: github:quartz-community/folder-page
     enabled: true
-  - source: github:quartz-community/tag-page
+  - source: ./my-plugins/tag-page
     enabled: true
 
   - source: github:quartz-community/graph
