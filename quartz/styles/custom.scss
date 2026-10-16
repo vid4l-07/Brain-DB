@@ -82,21 +82,22 @@ tbody, li, p {
     line-height: 1.7rem;
 }
 
-ul::-webkit-scrollbar {
+*::-webkit-scrollbar {
   display: none;
-  width: 4px;
+  width: 5px;
+  height: 5px;
 }
-ul::-webkit-scrollbar-track {
-  background: transparent;
+*::-webkit-scrollbar-track {
+  background: var(--darker);
 }
-ul::-webkit-scrollbar-thumb {
-  background: var(--lightgray);
+*::-webkit-scrollbar-thumb {
+  background: var(--gray);
   border-radius: 5px;
 }
-ul::-webkit-scrollbar-thumb:hover {
+*::-webkit-scrollbar-thumb:hover {
   background: var(--gray);
 }
-ul:hover::-webkit-scrollbar {
+*:hover::-webkit-scrollbar {
   display: block;
 }
 
