@@ -3,6 +3,20 @@
 // variables in util/theme.ts
 
 @font-face {
+  font-family: "Cantarell";
+  src: url("static/fonts/Cantarell/Cantarell-Regular.ttf") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Cantarell";
+  src: url("static/fonts/Cantarell/Cantarell-Bold.ttf") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
   font-family: "Mononoki";
   src: url("static/fonts/mononoki/MononokiNerdFontMono-Regular.ttf") format("woff2");
   font-weight: 400;
@@ -16,28 +30,14 @@
   font-style: normal;
 }
 
-@font-face {
-  font-family: "Noto Sans Mono";
-  src: url("static/fonts/noto_sans_mono/NotoSansMono-Regular.ttf") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Noto Sans Mono";
-  src: url("static/fonts/noto_sans_mono/NotoSansMono-Bold.ttf") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-}
-
 :root {
   --titleFont:  "Mononoki", monospace;
-  --bodyFont: "Noto Sans Mono", monospace;
+  --bodyFont: "Cantarell", monospace;
   --headerFont: "Mononoki", monospace;
+  --font-text: "Cantarell", monospace;
+  --font-interface: "Cantarell", sans-serif;
+  --font-monospace: "Cantarell", monospace;
   --codeFont: "Mononoki", monospace;
-  --font-text: "Noto Sans Mono", monospace;
-  --font-interface: "Noto Sans Mono", sans-serif;
-  --font-monospace: "Noto Sans Mono", monospace;
 
   --transition: background-color 0.15s linear, color 0.15s linear, border-color 0.15s linear;
 }
@@ -49,10 +49,6 @@ h1, h2, h3, h4, h5, h6 {
 ::selection {
   background-color: var(--selection_bg);
   color: var(--selection_fg);
-}
-
-html {
-  font-size: 15px;
 }
 
 body, .center, code {
@@ -76,6 +72,10 @@ body {
   background-size: auto, 50px 50px, 50px 50px;
 
   background-attachment: fixed;
+}
+
+p {
+  font-size: 1.1rem;
 }
 
 tbody, li, p {
