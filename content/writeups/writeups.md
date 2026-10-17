@@ -1,7 +1,3 @@
 Theese writeups are organized by tags.
 You can find all the tags in [[/tags]]
 
-Most relevant tags:
-
-#linux · #web · #containers · #smb
-
