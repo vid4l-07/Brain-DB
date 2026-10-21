@@ -42,6 +42,10 @@
   --transition: background-color 0.15s linear, color 0.15s linear, border-color 0.15s linear;
 }
 
+html {
+  font-size: 1.1rem;
+}
+
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--titleFont) !important;
 }
@@ -72,10 +76,6 @@ body {
   background-size: auto, 50px 50px, 50px 50px;
 
   background-attachment: fixed;
-}
-
-p {
-  font-size: 1.1rem;
 }
 
 tbody, li, p {
@@ -194,12 +194,11 @@ li.section-li>.section {
 }
 
 .meta {
-  font-size: 0.8rem;
   margin-bottom: 7px;
 }
 
 .desc>h3 {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 }
 
 .tags{
@@ -210,10 +209,6 @@ li.section-li>.section {
 .tags>li {
   display: inline-block;
   margin-right: 15px;
-}
-
-.folder-container div>a{
-  font-size: 1rem;
 }
 
 .folder-container>div,
@@ -228,6 +223,7 @@ li.section-li>.section {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 1rem;
 }
 
 .page-header {
