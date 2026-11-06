@@ -405,7 +405,7 @@ The vulnerability lies in the use of `eval` with the untrusted `tax_class` value
 >		exit 1
 >	
 >	eval "${tax_class}=${duty_pct}"   # tax_class is not validated
-...
+>...
 >```
 
 ## Exploitation
