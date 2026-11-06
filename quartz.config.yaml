@@ -14,12 +14,13 @@ configuration:
     - templates
     - .obsidian
   theme:
-    fontOrigin: googleFonts
+    fontOrigin: local
     cdnCaching: true
     typography:
-      header: Schibsted Grotesk
-      body: Source Sans Pro
-      code: IBM Plex Mono
+      title: Mononoki
+      header: Mononoki
+      body: Space Grotesk
+      code: Mononoki
     colors:
       lightMode:
         light: "#f2f1f5"
@@ -133,7 +134,7 @@ plugins:
     order: 92
 
   - source: github:quartz-community/fonts
-    enabled: true
+    enabled: false
   - source: github:quartz-community/remove-draft
     enabled: true
 

@@ -3,51 +3,74 @@
 // variables in util/theme.ts
 
 @font-face {
-  font-family: "Cantarell";
-  src: url("static/fonts/Cantarell/Cantarell-Regular.ttf") format("woff2");
+  font-family: "Space Grotesk";
+  src: url("static/fonts/SpaceGrotesk/SpaceGrotesk-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("static/fonts/SpaceGrotesk/SpaceGrotesk-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
-  font-family: "Cantarell";
-  src: url("static/fonts/Cantarell/Cantarell-Bold.ttf") format("woff2");
+  font-family: "Space Grotesk";
+  src: url("static/fonts/SpaceGrotesk/SpaceGrotesk-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("static/fonts/SpaceGrotesk/SpaceGrotesk-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("static/fonts/SpaceGrotesk/SpaceGrotesk-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Mononoki";
-  src: url("static/fonts/mononoki/MononokiNerdFontMono-Regular.ttf") format("woff2");
+  src: url("static/fonts/mononoki/MononokiNerdFontMono-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Mononoki";
-  src: url("static/fonts/mononoki/MononokiNerdFontMono-Bold.ttf") format("woff2");
+  src: url("static/fonts/mononoki/MononokiNerdFontMono-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
+}
+
+@font-face {
+  font-family: "Mononoki";
+  src: url("static/fonts/mononoki/MononokiNerdFontMono-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Mononoki";
+  src: url("static/fonts/mononoki/MononokiNerdFontMono-BoldItalic.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
 }
 
 :root {
-  --titleFont:  "Mononoki", monospace;
-  --bodyFont: "Cantarell", monospace;
-  --headerFont: "Mononoki", monospace;
-  --font-text: "Cantarell", monospace;
-  --font-interface: "Cantarell", sans-serif;
-  --font-monospace: "Cantarell", monospace;
-  --codeFont: "Mononoki", monospace;
-
   --transition: background-color 0.15s linear, color 0.15s linear, border-color 0.15s linear;
 }
 
 html {
   font-size: 1.1rem;
-}
-
-h1, h2, h3, h4, h5, h6 {
-    font-family: var(--titleFont) !important;
 }
 
 ::selection {
