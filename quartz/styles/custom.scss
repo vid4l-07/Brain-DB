@@ -20,25 +20,6 @@ body, .center, code {
   transition: var(--transition);
 }
 
-body {
-  background:
-    linear-gradient(
-    90deg,
-    var(--light) 0%,
-    transparent 50%,
-    var(--light) 100%
-    ),
-
-    linear-gradient(var(--highlight) 1px, transparent 1px),
-    linear-gradient(90deg, var(--highlight) 1px, transparent 1px)
-
-    var(--light);
-
-  background-size: auto, 50px 50px, 50px 50px;
-
-  background-attachment: fixed;
-}
-
 tbody, li, p {
     line-height: 1.7rem;
 }
@@ -70,7 +51,7 @@ tbody, li, p {
   border-radius: 10px;
 
   background-color: var(--darker);
-  box-shadow: 0px 0px 19px 1px var(--shadow);
+  box-shadow: 0px 0px 7px 1px var(--shadow);
 
   @media all and ($desktop) {
     margin-top: 70px;
