@@ -58,6 +58,10 @@ tbody, li, p {
   }
 }
 
+time {
+  font-size: 0.75rem;
+}
+
 li:hover >a{
   color: var(--tertiary);
   opacity: 1;

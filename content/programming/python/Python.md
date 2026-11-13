@@ -1,3 +1,7 @@
+---
+created: 2026-9-7
+---
+
 # Python
 
 - [[programming/python/Variables|Variables]]

@@ -1,3 +1,7 @@
+---
+created: 2026-8-3
+---
+
 #htb #medium #linux #smb #null-auth #print-spooler #cve-2026-4480 #rce #cron #rclone #credentials-reuse #symlink #smb-wide-links #systemd #service-overrides
 # Enumeration
 ## Nmap

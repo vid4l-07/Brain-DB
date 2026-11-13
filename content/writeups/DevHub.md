@@ -1,3 +1,7 @@
+---
+created: 2026-7-20
+---
+
 #htb #medium #linux #web #mcp #mcp-jam #cve-2026-23744 #api #rce #port-forwarding #chisel #jupyter #process-enumeration #token-leak #flask #api-key-leak #ssh-keys
 
 # Enumeration

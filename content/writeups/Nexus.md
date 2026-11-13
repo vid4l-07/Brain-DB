@@ -1,3 +1,7 @@
+---
+created: 2026-7-13
+---
+
 #htb #easy #linux #web #subdomains #gitea #env-leak #credentials-reuse #krayin #cve-2026-38526 #file-upload #systemd-timers #git #path-traversal
 
 # Enumeration

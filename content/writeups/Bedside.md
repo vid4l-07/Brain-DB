@@ -1,3 +1,7 @@
+---
+created: 2026-8-6
+---
+
 #htb #medium #linux #web #subdomains #pdfminer #cve-2025-70559 #pickle #deserialization #pdf #rce #containers #docker #container-escape #path-traversal #sudo #pytorch #pytorch-checkpoint #machine-learning
 # Enumeration
 ## Nmap

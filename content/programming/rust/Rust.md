@@ -1,3 +1,7 @@
+---
+created: 2026-8-22
+---
+
 1. [[programming/rust/Variables|Variables]]
 2. [[programming/rust/Data Types|Data Types]]
 3. [[programming/rust/Ownership and Borrowing|Ownership and Borrowing]]

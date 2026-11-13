@@ -1,3 +1,7 @@
+---
+created: 2026-6-22
+---
+
 #in-progress #hard #linux #web #htb #subdomains #nginx-ui #cve-2026-27944 #backup #decryption #sqlite #bcrypt  #cve-2026-3888 #toctou #race-condition
 # Enumeration
 ## Nmap

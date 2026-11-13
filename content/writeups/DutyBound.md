@@ -1,3 +1,7 @@
+---
+created: 2026-11-6
+---
+
 #htb #medium #linux #web #bar-code #bcbp #sqli #sql-error-based #postgresql #rce #x11 #openbox #systemd #eval-injection
 
 # Enumeration

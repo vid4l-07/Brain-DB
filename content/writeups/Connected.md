@@ -1,3 +1,7 @@
+---
+created: 2026-6-11
+---
+
 #easy #htb #linux #web #freepbx #cve-2025-57819 #sqli #cron #rce #writable-config #incron
 # Enumeration
 ## Nmap

@@ -1,3 +1,7 @@
+---
+created: 2026-8-30
+---
+
 1. [[programming/c++/Data Types|Data-Types]]
 2. [[programming/c++/Strings|Strings]]
 3. [[programming/c++/Arrays and Vectors|Arrays and Vectors]]
