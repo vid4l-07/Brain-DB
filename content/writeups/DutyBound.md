@@ -79,7 +79,7 @@ The structure of a valid BCBP is:
 | 47     | 1   | Compartment                       |
 | 48     | 4   | Seat number                       |
 | 52     | 5   | Check-in sequence                 |
-| 57     | 1   | passenger status                  |
+| 57     | 1   | Passenger status                  |
 | 58     | 2   | Size of conditional section (hex) |
 
 After constructing a 60-character BCBP string and setting the conditional section size to `00`, the server returned `BCBP_ERR_CONDITIONAL_REQUIRED` for item 6, indicating that additional conditional data was required.
