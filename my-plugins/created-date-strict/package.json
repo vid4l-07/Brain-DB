@@ -1,0 +1,24 @@
+{
+  "name": "@quartz-community/created-date-strict",
+  "version": "0.1.0",
+  "description": "Hides the created date when it does not come from frontmatter.",
+  "type": "module",
+  "license": "MIT",
+  "main": "./index.js",
+  "exports": {
+    ".": {
+      "import": "./index.js"
+    }
+  },
+  "quartz": {
+    "name": "created-date-strict",
+    "displayName": "Created Date Strict",
+    "category": "transformer",
+    "version": "1.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "defaultOrder": 11,
+    "defaultEnabled": true,
+    "defaultOptions": {}
+  }
+}

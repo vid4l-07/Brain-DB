@@ -58,17 +58,19 @@ configuration:
 
 plugins:
   - source: github:quartz-community/created-modified-date
-    enabled: false
+    enabled: true
     options:
       defaultDateType: created
       priority:
         - frontmatter
-        - git
-        - filesystem
     order: 10
 
-  - source: github:quartz-community/syntax-highlighting
+  - source: ./my-plugins/created-date-strict
     enabled: true
+    order: 11
+
+  - source: github:quartz-community/syntax-highlighting
+    enabled: true  # Enable the community one too 
     options:
       theme:
         light: catppuccin-macchiato # catppuccin-latte
@@ -268,7 +270,17 @@ plugins:
         Discord Community: https://discord.gg/cRFFHYye7t
 
   - source: github:quartz-community/recent-notes
-    enabled: false
+    enabled: true
+    layout:
+      position: afterBody
+      priority: 100
+      condition: is-index
+    options:
+      title: Recent notes
+      limit: 5
+      showTags: true
+      hideTagPages: true
+      hideFolderPages: true
 
   - source: github:quartz-community/spacer
     enabled: true
