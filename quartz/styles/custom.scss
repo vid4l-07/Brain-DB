@@ -178,12 +178,20 @@ li.section-li>.section {
 
 .tags{
   font-size: 0.9rem;
-  margin-top: 7px;
+  margin-top: 5px;
   padding: 0;
+  line-height: 1.3;
 }
+
 .tags>li {
   display: inline-block;
   margin-right: 7px;
+  line-height: 0;
+}
+
+a.internal.tag-link {
+  line-height: 0;
+  // color: var(--tertiary);
 }
 
 a.internal.tag-link:before {
