@@ -462,6 +462,17 @@ PageList.css = `
   margin: 0;
 }
 `;
+PageList.afterDOMLoaded = `
+if (!window.__pageDescriptionToggle) {
+  window.__pageDescriptionToggle = true;
+  document.addEventListener("click", (e) => {
+    const target = e.target;
+    if (!(target instanceof Element)) return;
+    const desc = target.closest(".page-description");
+    if (desc) desc.classList.toggle("is-expanded");
+  });
+}
+`;
 
 // node_modules/comma-separated-tokens/index.js
 function stringify(values, options) {
@@ -2696,7 +2707,7 @@ function i18n(locale) {
 }
 
 // src/components/styles/listPage.scss
-var listPage_default = "ul.section-ul {\n  list-style: none;\n  margin-top: 2em;\n  padding-left: 0;\n}\n\nli.section-li {\n  margin-bottom: 1em;\n}\nli.section-li > .section {\n  display: grid;\n  grid-template-columns: fit-content(8em) 3fr 1fr;\n}\n@media all and (max-width: 600px) {\n  li.section-li > .section > .tags {\n    display: none;\n  }\n}\nli.section-li > .section > .desc > h3 > a {\n  background-color: transparent;\n}\nli.section-li > .section .meta {\n  margin: 0 1em 0 0;\n  opacity: 0.6;\n}\nli.section-li > .section > .page-description {\n  grid-column: 1/-1;\n  margin: 0.35rem 0 0;\n  display: -webkit-box;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}\n\n.popover .section {\n  grid-template-columns: fit-content(8em) 1fr !important;\n}\n.popover .section > .tags {\n  display: none;\n}";
+var listPage_default = "ul.section-ul {\n  list-style: none;\n  margin-top: 2em;\n  padding-left: 0;\n}\n\nli.section-li {\n  margin-bottom: 1em;\n}\nli.section-li > .section {\n  display: grid;\n  grid-template-columns: fit-content(8em) 3fr 1fr;\n}\n@media all and (max-width: 600px) {\n  li.section-li > .section > .tags {\n    display: none;\n  }\n}\nli.section-li > .section > .desc > h3 > a {\n  background-color: transparent;\n}\nli.section-li > .section .meta {\n  margin: 0 1em 0 0;\n  opacity: 0.6;\n}\nli.section-li > .section > .page-description {\n  grid-column: 1/-1;\n  margin: 0.35rem 0 0;\n  display: -webkit-box;\n  -webkit-line-clamp: 2;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n  cursor: pointer;\n}\nli.section-li > .section > .page-description.is-expanded {\n  -webkit-line-clamp: unset;\n  display: block;\n  overflow: visible;\n}\n\n.popover .section {\n  grid-template-columns: fit-content(8em) 1fr !important;\n}\n.popover .section > .tags {\n  display: none;\n}";
 
 // src/components/FolderContent.tsx
 var defaultOptions = {
@@ -2828,6 +2839,7 @@ var FolderContent_default = ((opts) => {
     ] });
   };
   FolderContent.css = concatenateResources(listPage_default, PageList.css);
+  FolderContent.afterDOMLoaded = concatenateResources(PageList.afterDOMLoaded);
   return FolderContent;
 });
 

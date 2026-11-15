@@ -161,5 +161,16 @@ export default ((userOpts?: Partial<RecentNotesOptions>) => {
   };
 
   RecentNotes.css = style;
+  RecentNotes.afterDOMLoaded = `
+if (!window.__pageDescriptionToggle) {
+  window.__pageDescriptionToggle = true;
+  document.addEventListener("click", (e) => {
+    const target = e.target;
+    if (!(target instanceof Element)) return;
+    const desc = target.closest(".page-description");
+    if (desc) desc.classList.toggle("is-expanded");
+  });
+}
+`;
   return RecentNotes;
 }) satisfies QuartzComponentConstructor;

@@ -124,3 +124,15 @@ PageList.css = `
   margin: 0;
 }
 `;
+
+PageList.afterDOMLoaded = `
+if (!window.__pageDescriptionToggle) {
+  window.__pageDescriptionToggle = true;
+  document.addEventListener("click", (e) => {
+    const target = e.target;
+    if (!(target instanceof Element)) return;
+    const desc = target.closest(".page-description");
+    if (desc) desc.classList.toggle("is-expanded");
+  });
+}
+`;

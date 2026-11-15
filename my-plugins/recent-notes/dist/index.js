@@ -468,7 +468,7 @@ function pathToRoot(slug2) {
 }
 
 // src/components/styles/recentNotes.scss
-var recentNotes_default = ".recent-notes > ul.recent-ul {\n  list-style: none;\n  margin-top: 1rem;\n  padding-left: 0;\n}\n.recent-notes > ul.recent-ul > li {\n  margin: 1rem 0;\n}\n.recent-notes > ul.recent-ul > li .section > .desc > h3 > a {\n  background-color: transparent;\n}\n.recent-notes > ul.recent-ul > li .section > .meta {\n  margin: 0 0 0.5rem 0;\n  opacity: 0.6;\n}\n.recent-notes > ul.recent-ul > li .section > .page-description {\n  margin: 0.35rem 0 0;\n  display: -webkit-box;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}";
+var recentNotes_default = ".recent-notes > ul.recent-ul {\n  list-style: none;\n  margin-top: 1rem;\n  padding-left: 0;\n}\n.recent-notes > ul.recent-ul > li {\n  margin: 1rem 0;\n}\n.recent-notes > ul.recent-ul > li .section > .desc > h3 > a {\n  background-color: transparent;\n}\n.recent-notes > ul.recent-ul > li .section > .meta {\n  margin: 0 0 0.5rem 0;\n  opacity: 0.6;\n}\n.recent-notes > ul.recent-ul > li .section > .page-description {\n  margin: 0.35rem 0 0;\n  display: -webkit-box;\n  -webkit-line-clamp: 2;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n  cursor: pointer;\n}\n.recent-notes > ul.recent-ul > li .section > .page-description.is-expanded {\n  -webkit-line-clamp: unset;\n  display: block;\n  overflow: visible;\n}";
 
 // src/components/RecentNotes.tsx
 function resolveDefaultDateType(data, cfg) {
@@ -535,6 +535,17 @@ var RecentNotes_default = ((userOpts) => {
     ] });
   };
   RecentNotes.css = recentNotes_default;
+  RecentNotes.afterDOMLoaded = `
+if (!window.__pageDescriptionToggle) {
+  window.__pageDescriptionToggle = true;
+  document.addEventListener("click", (e) => {
+    const target = e.target;
+    if (!(target instanceof Element)) return;
+    const desc = target.closest(".page-description");
+    if (desc) desc.classList.toggle("is-expanded");
+  });
+}
+`;
   return RecentNotes;
 });
 
