@@ -179,7 +179,8 @@ plugins:
     enabled: true
   - source: github:quartz-community/content-page
     enabled: true
-  - source: github:quartz-community/folder-page
+  # - source: github:quartz-community/folder-page
+  - source: ./my-plugins/folder-page
     enabled: true
   - source: ./my-plugins/tag-page
     enabled: true
@@ -269,7 +270,8 @@ plugins:
         GitHub: https://github.com/jackyzha0/quartz
         Discord Community: https://discord.gg/cRFFHYye7t
 
-  - source: github:quartz-community/recent-notes
+  # - source: github:quartz-community/recent-notes
+  - source: ./my-plugins/recent-notes
     enabled: true
     layout:
       position: afterBody
@@ -304,7 +306,7 @@ plugins:
         - tags
         - aliases
       excludedProperties: []
-      hidePropertiesView: false
+      hidePropertiesView: true
       delimiters: ---
       language: yaml
     order: 5

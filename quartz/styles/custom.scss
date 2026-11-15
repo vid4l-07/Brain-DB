@@ -84,6 +84,10 @@ a {
   background-color: transparent;
 }
 
+h3>.internal {
+  font-size: 1.4rem;
+}
+
 pre {
   border: none;
 }
@@ -142,11 +146,6 @@ li.section-li>.section {
   display: grid;
 }
 
-.recent-notes > h3:first-child {
-  margin: 1.9rem 0 0;
-  font-size: 1.4rem;
-}
-
 .recent-notes > ul.recent-ul > li.recent-li {
   border-bottom: solid 1px var(--highlight);
   padding-bottom: 1em;
@@ -181,6 +180,7 @@ li.section-li>.section {
   margin-top: 5px;
   padding: 0;
   line-height: 1.3;
+  opacity: 0.8;
 }
 
 .tags>li {
