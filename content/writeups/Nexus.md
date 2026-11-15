@@ -1,5 +1,6 @@
 ---
 created: 2026-7-13
+description: Nexus is an easy Linux box featuring a Gitea instance that exposes repository configuration files and historical credentials, leading to access to a Krayin CRM dashboard vulnerable to CVE-2026-38526. The foothold is obtained through an unrestricted PHP file upload, followed by credential reuse to gain SSH access as jones. Privilege escalation involves abusing a root-owned systemd timer that synchronizes Gitea template repositories, exploiting unsanitized Git tree paths to write an SSH public key into /root/.ssh/authorized_keys.
 ---
 
 #htb #easy #linux #web #subdomains #gitea #env-leak #credentials-reuse #krayin #cve-2026-38526 #file-upload #systemd-timers #git #path-traversal

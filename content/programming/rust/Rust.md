@@ -1,5 +1,6 @@
 ---
 created: 2026-8-22
+description: A guide to Rust's core language concepts, from variables, data types, and control flow to functions, closures, structs, enums, and traits. It explores Rust's ownership and borrowing model, lifetimes, smart pointers, and error handling with Option and Result, alongside code organization through modules and macros, and concurrent programming.
 ---
 
 1. [[programming/rust/Variables|Variables]]

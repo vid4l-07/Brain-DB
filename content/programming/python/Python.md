@@ -1,8 +1,7 @@
 ---
 created: 2026-9-7
+description: An introduction to Python's fundamental concepts and programming paradigms, covering variables, data types, strings, data structures, and control flow. It explores functions, classes, objects, and decorators, as well as how to organize and structure code using modules and packages.
 ---
-
-# Python
 
 - [[programming/python/Variables|Variables]]
 - [[programming/python/Data Types|Data Types]]

@@ -1,5 +1,6 @@
 ---
 created: 2026-11-6
+description: DutyBound is a Linux box featuring a web application vulnerable to SQL injection in its BCBP barcode verification process, which can be escalated to remote code execution through PostgreSQL. The foothold involves abusing an active X11 session to gain access as another user, while privilege escalation is achieved through a systemd path unit and a Bash eval injection.
 ---
 
 #htb #medium #linux #web #bar-code #bcbp #sqli #sql-error-based #postgresql #rce #x11 #openbox #systemd #eval-injection

@@ -1,5 +1,6 @@
 ---
 created: 2026-8-6
+description: Bedside is a Linux box hosting a file upload application vulnerable to CVE-2025-70559, allowing remote code execution through unsafe pickle deserialization in pdfminer.six. The foothold involves exploiting a path traversal vulnerability in an internal image viewer to escape the container and retrieve an SSH private key. Privilege escalation is achieved by abusing an unrestricted PyTorch checkpoint loader to execute malicious pickle payloads as root.
 ---
 
 #htb #medium #linux #web #subdomains #pdfminer #cve-2025-70559 #pickle #deserialization #pdf #rce #containers #docker #container-escape #path-traversal #sudo #pytorch #pytorch-checkpoint #machine-learning

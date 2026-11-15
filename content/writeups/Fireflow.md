@@ -1,5 +1,6 @@
 ---
 created: 2026-6-24
+description: Fireflow is a Linux box running Langflow, vulnerable to CVE-2025-3248, which allows unauthenticated remote code execution through a public flow endpoint. The foothold involves extracting credentials from environment variables to gain SSH access as nightfall. Privilege escalation requires exploiting an MCP server through JWT algorithm confusion to execute arbitrary Python code, then abusing Kubernetes RBAC permissions over nodes/proxy to access a pod with the host's root directory mounted and retrieve the root flag.
 ---
 
 #medium #htb #linux #web #subdomains #langflow #cve-2025-3248 #rce #openapi #api #env-leak #mcp #port-forwarding #jwt #containers #kubernetes #kubelet #rbac

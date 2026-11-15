@@ -1,5 +1,6 @@
 ---
 created: 2026-8-30
+description: An introduction to C++, covering the language's core syntax, data types, strings, collections, operators, and control flow, before moving into functions, namespaces, error handling, and memory management. It also explores object-oriented programming, pointers and references, smart pointers, inheritance, polymorphism, move semantics, templates, the Standard Library's containers, iterators and algorithms, and file handling.
 ---
 
 1. [[programming/c++/Data Types|Data-Types]]

@@ -1,5 +1,6 @@
 ---
 created: 2026-8-3
+description: Abducted is a Linux box wich contains an exposed SMB service vulnerable to CVE-2026-4480, allowing unauthenticated remote code execution through a malicious print job. The foothold leads to credential reuse via an exposed rclone configuration, followed by lateral movement through Samba symbolic link abuse and privilege escalation by exploiting writable systemd service overrides.
 ---
 
 #htb #medium #linux #smb #null-auth #print-spooler #cve-2026-4480 #rce #cron #rclone #credentials-reuse #symlink #smb-wide-links #systemd #service-overrides

@@ -1,5 +1,6 @@
 ---
 created: 2026-6-22
+description: Snapped is a hard Linux box running Nginx UI, vulnerable to CVE-2026-27944, which allows unauthenticated backup downloads. The backup exposes an AES-256 encryption key and IV, allowing the database to be decrypted and a bcrypt password hash cracked to gain SSH access as jonathan. Privilege escalation involves exploiting a TOCTOU race condition in snap-confine and systemd-tmpfiles (CVE-2026-3888).
 ---
 
 #in-progress #hard #linux #web #htb #subdomains #nginx-ui #cve-2026-27944 #backup #decryption #sqlite #bcrypt  #cve-2026-3888 #toctou #race-condition

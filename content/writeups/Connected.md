@@ -1,5 +1,6 @@
 ---
 created: 2026-6-11
+description: Connected is an easy Linux box running FreePBX, vulnerable to an unauthenticated SQL injection in CVE-2025-57819. The vulnerability is exploited to inject a malicious cron job and gain remote code execution. Privilege escalation involves abusing a writable configuration file monitored by incron, allowing commands to be executed as root when the DAHDI service restarts.
 ---
 
 #easy #htb #linux #web #freepbx #cve-2025-57819 #sqli #cron #rce #writable-config #incron
