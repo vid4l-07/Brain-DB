@@ -1,4 +1,4 @@
-Theese writeups are organized by tags.
+Estos writeups están organizados por etiquetas.
 
-You can find all the tags in [[/tags]]
+Puedes encontrar todas las etiquetas en [[/tags]]
 

