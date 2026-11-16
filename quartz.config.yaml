@@ -279,7 +279,7 @@ plugins:
       condition: is-index
     options:
       title: Recent Posts
-      limit: 5
+      limit: 7
       showTags: true
       hideTagPages: true
       hideFolderPages: true
