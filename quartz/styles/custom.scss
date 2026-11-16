@@ -69,6 +69,11 @@ a {
   font-family: var(--headerFont);
 }
 
+a[role="anchor"] {
+    display: none;
+}
+
+
 .toc {
   margin-right: 15px;
 }
