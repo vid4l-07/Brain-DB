@@ -3,7 +3,7 @@ created: 2026-7-20
 description: DevHub es una máquina Linux que expone una instancia de MCP Jam vulnerable a CVE-2026-23744, lo que permite la ejecución remota de código sin autenticación a través del endpoint /api/mcp/connect. El acceso inicial implica usar Chisel para acceder a un servicio interno de Jupyter y recuperar su token de autenticación desde la lista de procesos para obtener acceso como analyst. La escalada de privilegios se consigue explotando un servidor MCP basado en Flask con una clave API hardcodeada para recuperar la clave privada SSH de root.
 ---
 
-#htb #medium #linux #web #mcp #mcp-jam #cve-2026-23744 #api #rce #port-forwarding #chisel #jupyter #process-enumeration #token-leak #flask #api-key-leak #ssh-keys
+#htb #medium #linux #web #mcp #mcp-jam #cve-2026-23744 #api #rce #port-forwarding #chisel #jupyter #process-enumeration #secret-leak #flask #api-key-leak #ssh-keys
 
 # Enumeración
 ## Nmap

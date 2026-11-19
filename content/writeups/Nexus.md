@@ -1,6 +1,6 @@
 ---
 created: 2026-7-13
-description: Nexus es una máquina Linux fácil que cuenta con una instancia de Gitea que expone archivos de configuración del repositorio y credenciales históricas, lo que conduce al acceso a un panel de Krayin CRM vulnerable a CVE-2026-38526. El acceso inicial se obtiene mediante una subida de archivos PHP sin restricciones, seguida de la reutilización de credenciales para obtener acceso SSH como jones. La escalada de privilegios implica abusar de un temporizador de systemd propiedad de root que sincroniza repositorios de plantillas de Gitea, explotando rutas del árbol de Git no saneadas para escribir una clave pública SSH en /root/.ssh/authorized_keys.
+description: Nexus es una máquina Linux que cuenta con una instancia de Gitea que expone archivos de configuración del repositorio y credenciales históricas, lo que conduce al acceso a un panel de Krayin CRM vulnerable a CVE-2026-38526. El acceso inicial se obtiene mediante una subida de archivos PHP sin restricciones, seguida de la reutilización de credenciales para obtener acceso SSH como jones. La escalada de privilegios implica abusar de un temporizador de systemd propiedad de root que sincroniza repositorios de plantillas de Gitea, explotando rutas del árbol de Git no saneadas para escribir una clave pública SSH en /root/.ssh/authorized_keys.
 ---
 
 #htb #easy #linux #web #subdomains #gitea #env-leak #credentials-reuse #krayin #cve-2026-38526 #file-upload #systemd-timers #git #path-traversal

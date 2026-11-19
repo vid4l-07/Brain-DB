@@ -1,6 +1,6 @@
 ---
 created: 2026-6-11
-description: Connected es una máquina Linux fácil que ejecuta FreePBX, vulnerable a una inyección SQL sin autenticación en CVE-2025-57819. La vulnerabilidad se explota para inyectar una tarea cron maliciosa y obtener ejecución remota de código. La escalada de privilegios implica abusar de un archivo de configuración escribible monitorizado por incron, lo que permite ejecutar comandos como root cuando el servicio DAHDI se reinicia.
+description: Connected es una máquina Linux que ejecuta FreePBX, vulnerable a una inyección SQL sin autenticación en CVE-2025-57819. La vulnerabilidad se explota para inyectar una tarea cron maliciosa y obtener ejecución remota de código. La escalada de privilegios implica abusar de un archivo de configuración escribible monitorizado por incron, lo que permite ejecutar comandos como root cuando el servicio DAHDI se reinicia.
 ---
 
 #easy #htb #linux #web #freepbx #cve-2025-57819 #sqli #cron #rce #writable-config #incron
