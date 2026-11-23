@@ -73,7 +73,12 @@ a[role="anchor"] {
     display: none;
 }
 
-
+audio, video {
+    max-width: 100%;
+    display: block;
+    margin: 1rem 0;
+    width: auto;
+}
 .toc {
   margin-right: 15px;
 }

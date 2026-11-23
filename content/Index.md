@@ -3,6 +3,7 @@ Leveling Up.
 ## Contenido
 
 - [[writeups|Writeups]] 
-- [[pentesting|Pentesting]]  
+- [[proyectos|Proyectos]]
+- [[pentesting|Pentesting]] 
 - [[programación|Programación]]
 
