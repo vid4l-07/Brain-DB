@@ -5,8 +5,7 @@ configuration:
   enableSPA: false
   enablePopovers: true
   analytics:
-    provider: google
-    tagId: G-DG0QGK2YMX
+    provider: plausible 
   locale: en-US
   baseUrl: vid4l-07.github.io/Brain-DB
   ignorePatterns:
