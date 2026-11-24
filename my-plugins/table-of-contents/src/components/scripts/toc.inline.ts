@@ -33,6 +33,10 @@ function updateInViewAndSection() {
       lastPassedSlug = header.id;
     }
   }
+  // At top of page, default to first section so TOC starts compressed
+  if (!lastPassedSlug && headers.length > 0) {
+    lastPassedSlug = headers[0].id;
+  }
 
   // Update in-view class
   if (lastPassedSlug !== currentInViewSlug) {
