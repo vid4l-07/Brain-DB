@@ -23,7 +23,6 @@ tbody, li, p {
 }
 
 *::-webkit-scrollbar {
-  display: none;
   width: 6px;
   height: 6px;
 }
@@ -36,9 +35,6 @@ tbody, li, p {
 }
 *::-webkit-scrollbar-thumb:hover {
   background: var(--gray);
-}
-*:hover::-webkit-scrollbar {
-  display: block;
 }
 
 .center {

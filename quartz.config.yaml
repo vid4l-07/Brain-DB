@@ -295,7 +295,7 @@ layout:
     top-nav:
       priority: 10
       direction: row
-      gap: 1rem
+      gap: 0.5rem
     toolbar:
       priority: 35
       direction: row

@@ -16,7 +16,7 @@ function resolveRelative(current, target) {
 }
 
 // src/components/styles/topFolders.scss
-var topFolders_default = ".top-folders {\n  display: flex;\n  flex-direction: column;\n  gap: 0.35rem;\n  min-width: 0;\n}\n\n.top-folders-title {\n  font-size: 1.75rem;\n  font-family: var(--titleFont);\n  margin: 0;\n}\n\n.top-folders-nav {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 0.35rem 1rem;\n  align-items: center;\n  font-family: var(--headerFont);\n}\n\n.top-folders-link {\n  color: var(--secondary);\n  font-size: 0.95rem;\n  font-weight: 600;\n  text-decoration: none;\n  text-transform: lowercase;\n}\n\n.top-folders-link:hover,\n.top-folders-link.is-active {\n  color: var(--tertiary);\n}\n\n@media all and (max-width: 800px) {\n  .top-folders-title {\n    font-size: 1.5rem;\n  }\n  .top-folders-nav {\n    gap: 0.25rem 0.75rem;\n  }\n}";
+var topFolders_default = ".top-folders {\n  display: flex;\n  flex-direction: column;\n  gap: 0.55rem;\n  min-width: 0;\n  margin-bottom: 10px;\n}\n\n.top-folders-title {\n  font-size: 1.75rem;\n  font-family: var(--titleFont);\n  margin: 0;\n}\n\n.top-folders-nav {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 0.35rem 1rem;\n  align-items: center;\n  font-family: var(--headerFont);\n}\n\n.top-folders-link {\n  color: var(--secondary);\n  font-size: 0.95rem;\n  font-weight: 600;\n  text-decoration: none;\n  text-transform: lowercase;\n}\n\n.top-folders-link:hover,\n.top-folders-link.is-active {\n  color: var(--tertiary);\n}\n\n@media all and (max-width: 800px) {\n  .top-folders-title {\n    font-size: 1.5rem;\n  }\n  .top-folders-nav {\n    gap: 0.25rem 0.75rem;\n  }\n}";
 var l;
 l = { __e: function(n2, l2, u3, t2) {
   for (var i2, r2, o2; l2 = l2.__; ) if ((i2 = l2.__c) && !i2.__) try {
