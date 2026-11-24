@@ -120,27 +120,6 @@ plugins:
       renderEngine: katex
     order: 80
 
-  - source: github:quartz-community/citations
-    enabled: false
-    order: 85
-  - source: github:quartz-community/hard-line-breaks
-    enabled: false
-    order: 90
-
-  - source: github:quartz-community/ox-hugo
-    enabled: false
-    order: 91
-  - source: github:quartz-community/roam
-    enabled: false
-    order: 92
-
-  - source: github:quartz-community/fonts
-    enabled: false
-  - source: github:quartz-community/remove-draft
-    enabled: true
-
-  - source: github:quartz-community/explicit-publish
-    enabled: false
   - source: github:quartz-community/unlisted-pages
     enabled: true
     options: {}
@@ -153,13 +132,6 @@ plugins:
       passwordField: password
       unlistWhenEncrypted: false
       outputPath: static/encryptedContentIndex.json
-
-  - source: github:quartz-community/stacked-pages
-    enabled: false
-    layout:
-      position: afterBody
-      priority: 50
-      display: all
 
   - source: github:quartz-community/alias-redirects
     enabled: true
@@ -178,40 +150,45 @@ plugins:
     enabled: true
   - source: github:quartz-community/content-page
     enabled: true
-  # - source: github:quartz-community/folder-page
+
   - source: ./my-plugins/folder-page
     enabled: true
   - source: ./my-plugins/tag-page
     enabled: true
 
-  - source: github:quartz-community/graph
+# Top nav / toolbar
+  - source: ./my-plugins/top-folders
     enabled: true
     layout:
-      position: right
-      group: toolbar
-      priority: 60
-
-# Toolbar
+      position: beforeBody
+      priority: 10
+      group: top-nav
+      groupOptions:
+        grow: true
   - source: github:quartz-community/search
     enabled: true
     layout:
-      position: right
-      priority: 10
-      group: toolbar
-      groupOptions:
-        grow: false
+      position: beforeBody
+      priority: 20
+      group: top-nav
   - source: github:quartz-community/darkmode
     enabled: false
     layout:
-      position: right
-      priority: 20
-      group: toolbar
+      position: beforeBody
+      priority: 30
+      group: top-nav
   - source: github:quartz-community/reader-mode
+    enabled: false
+    layout:
+      position: beforeBody
+      priority: 40
+      group: top-nav
+  - source: github:quartz-community/graph
     enabled: true
     layout:
-      position: right
-      priority: 30
-      group: toolbar
+      position: beforeBody
+      priority: 50
+      group: top-nav
 
 # Files
   - source: github:quartz-community/backlinks
@@ -221,7 +198,7 @@ plugins:
       priority: 50
       display: desktop-only
   - source: github:quartz-community/explorer
-    enabled: true
+    enabled: false
     layout:
       position: left
       priority: 50
@@ -239,40 +216,33 @@ plugins:
     enabled: true
     layout:
       position: beforeBody
-      priority: 10
+      priority: 55
+      condition: not-index
+      group: page-name
+      groupOptions:
+        grow: true
+
   - source: github:quartz-community/content-meta
     enabled: false
     layout:
       position: beforeBody
-      priority: 20
+      priority: 70
   - source: github:quartz-community/tag-list
     enabled: false
     layout:
       position: beforeBody
-      priority: 30
-  - source: github:quartz-community/page-title
-    enabled: true
-    layout:
-      position: left
-      priority: 10
+      priority: 80
   - source: github:quartz-community/breadcrumbs
     enabled: true
     layout:
       position: beforeBody
-      priority: 5
+      priority: 60
       condition: not-index
+      group: page-name
     options:
       spacerSymbol: "/"
       rootName: "~"
 
-  - source: github:quartz-community/footer
-    enabled: false
-    options:
-      links:
-        GitHub: https://github.com/jackyzha0/quartz
-        Discord Community: https://discord.gg/cRFFHYye7t
-
-  # - source: github:quartz-community/recent-notes
   - source: ./my-plugins/recent-notes
     enabled: true
     layout:
@@ -320,10 +290,17 @@ plugins:
 
 layout:
   groups:
+    top-nav:
+      priority: 10
+      direction: row
+      gap: 1rem
     toolbar:
       priority: 35
       direction: row
       gap: 0.5rem
+    page-name:
+      priority: 40
+      direction: row
     header:
       priority: 10
       direction: row
@@ -336,16 +313,24 @@ layout:
         beforeBody: []
         left: []
         right: []
-    content: {}
+    content:
+      positions:
+        left: []
     folder:
       exclude:
         - reader-mode
       positions:
+        left: []
         right: []
     tag:
       exclude:
         - reader-mode
       positions:
+        left: []
         right: []
-    canvas: {}
-    bases: {}
+    canvas:
+      positions:
+        left: []
+    bases:
+      positions:
+        left: []
