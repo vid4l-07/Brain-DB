@@ -232,7 +232,7 @@ plugins:
     layout:
       position: beforeBody
       priority: 80
-  - source: github:quartz-community/breadcrumbs
+  - source: ./my-plugins/breadcrumbs
     enabled: true
     layout:
       position: beforeBody
@@ -242,6 +242,7 @@ plugins:
     options:
       spacerSymbol: "/"
       rootName: "~"
+      shortenParentFoldersAt: 2
 
   - source: ./my-plugins/recent-notes
     enabled: true
