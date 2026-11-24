@@ -5,7 +5,7 @@ description: Bedside es una máquina Linux que aloja una aplicación de subida d
 
 #htb #medium #linux #web #subdomains #pdfminer #cve-2025-70559 #pickle #deserialization #pdf #rce #containers #docker #container-escape #path-traversal #sudo #pytorch #pytorch-checkpoint #machine-learning
 # Enumeración
-## Nmap
+## Escaneo de puertos
 
 ```bash
 [hvidal@fedora] ~/d/h/h/m/b/scan

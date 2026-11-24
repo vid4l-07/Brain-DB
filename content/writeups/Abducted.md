@@ -5,7 +5,7 @@ description: Abducted es una máquina Linux que expone un servicio SMB vulnerabl
 
 #htb #medium #linux #smb #null-auth #print-spooler #cve-2026-4480 #rce #cron #rclone #credentials-reuse #symlink #smb-wide-links #systemd #service-overrides
 # Enumeración
-## Nmap
+## Escaneo de puertos
 
 ```bash
 [hvidal@fedora] ~/d/h/h/m/a/scan

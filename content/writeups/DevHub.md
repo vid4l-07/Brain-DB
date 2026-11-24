@@ -6,7 +6,7 @@ description: DevHub es una máquina Linux que expone una instancia de MCP Jam vu
 #htb #medium #linux #web #mcp #mcp-jam #cve-2026-23744 #api #rce #port-forwarding #chisel #jupyter #process-enumeration #secret-leak #flask #api-key-leak #ssh-keys
 
 # Enumeración
-## Nmap
+## Escaneo de puertos
 
 ```bash
 [hvidal@fedora] ~/d/h/h/m/d/scan

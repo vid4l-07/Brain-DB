@@ -6,7 +6,7 @@ description: DutyBound es una máquina Linux que presenta una aplicación web vu
 #htb #medium #linux #web #bar-code #bcbp #sqli #sql-error-based #postgresql #rce #x11 #openbox #systemd #eval-injection
 
 # Enumeración
-## Nmap
+## Escaneo de puertos
 
 ```bash
 [hvidal@fedora] ~/d/h/h/m/d/scan

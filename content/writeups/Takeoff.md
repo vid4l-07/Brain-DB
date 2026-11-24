@@ -4,7 +4,7 @@ description: Takeoff es una máquina Linux que aloja un sitio web que combina un
 ---
 #htb #hard #linux #web #ssti #go #text-template #qr-code #env-leak #hmac #gob #secret-leak #n8n #docker #containers #bind-mount #container-escape #suid 
 # Enumeración
-## Nmap
+## Escaneo de puertos
 
 ```bash
 [hvidal@fedora] ~/d/h/h/m/t/scan

@@ -6,7 +6,7 @@ description: Nexus es una máquina Linux que cuenta con una instancia de Gitea q
 #htb #easy #linux #web #subdomains #gitea #env-leak #credentials-reuse #krayin #cve-2026-38526 #file-upload #systemd-timers #git #path-traversal
 
 # Enumeración
-## Nmap
+## Escaneo de puertos
 
 ```bash
 [hvidal@fedora] ~/d/h/h/m/n/scan

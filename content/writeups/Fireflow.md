@@ -5,7 +5,7 @@ description: Fireflow es una máquina Linux que ejecuta Langflow, vulnerable a C
 
 #medium #htb #linux #web #subdomains #langflow #cve-2025-3248 #rce #openapi #api #env-leak #mcp #port-forwarding #jwt #containers #kubernetes #kubelet #rbac
 # Enumeración
-## Nmap
+## Escaneo de puertos
 
 ```bash
 [hvidal@fedora] ~/d/h/h/m/f/scan

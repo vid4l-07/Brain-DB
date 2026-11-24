@@ -5,7 +5,7 @@ description: Connected es una máquina Linux que ejecuta FreePBX, vulnerable a u
 
 #easy #htb #linux #web #freepbx #cve-2025-57819 #sqli #cron #rce #writable-config #incron
 # Enumeración
-## Nmap
+## Escaneo de puertos
 
 ```bash
 [hvidal@fedora] ~/d/h/h/m/c/scan
