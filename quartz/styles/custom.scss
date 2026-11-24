@@ -19,7 +19,7 @@ body, .center, code {
 }
 
 tbody, li, p {
-    line-height: 1.7rem;
+    line-height: 1.6rem;
 }
 
 *::-webkit-scrollbar {
@@ -67,6 +67,7 @@ a:hover {
 
 a {
   font-family: var(--headerFont);
+  font-weight: normal;
 }
 
 a[role="anchor"] {
@@ -107,6 +108,14 @@ code {
   border: 1px, solid, var(--gray);
   transition: border-color 0.2 ease;
   font-size: .85rem;
+}
+
+.breadcrumb-container {
+  gap: 0;
+}
+
+.breadcrumb-element p {
+  margin: 0 .1rem;
 }
 
 .search {

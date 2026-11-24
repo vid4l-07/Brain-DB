@@ -261,6 +261,9 @@ plugins:
       position: beforeBody
       priority: 5
       condition: not-index
+    options:
+      spacerSymbol: "/"
+      rootName: "~"
 
   - source: github:quartz-community/footer
     enabled: false
