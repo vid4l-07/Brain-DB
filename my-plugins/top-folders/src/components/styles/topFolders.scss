@@ -1,0 +1,43 @@
+.top-folders {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.top-folders-title {
+  font-size: 1.75rem;
+  font-family: var(--titleFont);
+  margin: 0;
+}
+
+.top-folders-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  align-items: center;
+  font-family: var(--headerFont);
+}
+
+.top-folders-link {
+  color: var(--secondary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  text-transform: lowercase;
+}
+
+.top-folders-link:hover,
+.top-folders-link.is-active {
+  color: var(--tertiary);
+}
+
+@media all and (max-width: 800px) {
+  .top-folders-title {
+    font-size: 1.5rem;
+  }
+
+  .top-folders-nav {
+    gap: 0.25rem 0.75rem;
+  }
+}
