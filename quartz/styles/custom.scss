@@ -124,6 +124,15 @@ code {
   font-size: .85rem;
 }
 
+.clipboard-button {
+  border: none !important;
+  background-color: transparent !important;
+}
+
+.clipboard-button:hover {
+  background-color: var(--gray) !important;
+}
+
 .breadcrumb-container {
   gap: 0;
   margin: 2rem 0 0;
