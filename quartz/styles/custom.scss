@@ -281,10 +281,15 @@ footer {
   opacity: .9;
   align-content: center;
   justify-items: center;
-  margin: 2rem 0 4rem;
+  margin: 1rem 0 4rem;
+  padding-top: 1rem;
   display: grid;
   grid-template-rows: 30px 30px;
   align-items: center;
+  
+  @media all and not ($desktop) {
+    border-top: 1px solid var(--gray)
+  }
 }
 
 footer ul {
@@ -304,17 +309,9 @@ footer ul {
     "grid-sidebar-left grid-center grid-sidebar-right"
     "grid-sidebar-left grid-footer grid-sidebar-right" / 270px auto 270px;
   }
-
-  @media all and ($tablet) {
-    margin-top: 45px;
-  }
 }
 
-.toc, .backlinks {
-  @media all and ($tablet) {
-    display: none;
-  }
-}
+
 
 .sidebar {
   @media all and ($desktop){
@@ -329,7 +326,7 @@ footer ul {
 }
 
 .center {
-  @media all and ($mobile) {
+  @media all and not ($desktop) {
     margin-top: 10px;
     background-color: transparent;
     box-shadow: none;

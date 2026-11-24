@@ -138,7 +138,7 @@ a {
   &.flex-component {
     display: flex;
   }
-  @media all and ($mobile) {
+  @media all and not ($desktop) {
     &.flex-component {
       display: none;
     }
@@ -151,7 +151,7 @@ a {
   &.flex-component {
     display: none;
   }
-  @media all and ($mobile) {
+  @media all and not ($desktop) {
     &.flex-component {
       display: flex;
     }
@@ -196,25 +196,13 @@ a {
     row-gap: #{map.get($desktopGrid, rowGap)};
     grid-template-areas: #{map.get($desktopGrid, templateAreas)};
 
-    @media all and ($tablet) {
-      grid-template-columns: #{map.get($tabletGrid, templateColumns)};
-      grid-template-rows: #{map.get($tabletGrid, templateRows)};
-      column-gap: #{map.get($tabletGrid, columnGap)};
-      row-gap: #{map.get($tabletGrid, rowGap)};
-      grid-template-areas: #{map.get($tabletGrid, templateAreas)};
-    }
-    @media all and ($mobile) {
+    @media all and not ($desktop) {
       grid-template-columns: #{map.get($mobileGrid, templateColumns)};
       grid-template-rows: #{map.get($mobileGrid, templateRows)};
       column-gap: #{map.get($mobileGrid, columnGap)};
       row-gap: #{map.get($mobileGrid, rowGap)};
       grid-template-areas: #{map.get($mobileGrid, templateAreas)};
-    }
-
-    @media all and not ($desktop) {
       padding: 0 1rem;
-    }
-    @media all and ($mobile) {
       margin: 0 auto;
     }
 
@@ -232,7 +220,7 @@ a {
       z-index: 1;
       grid-area: grid-sidebar-left;
       flex-direction: column;
-      @media all and ($mobile) {
+      @media all and not ($desktop) {
         gap: 0;
         align-items: center;
         position: initial;
@@ -248,11 +236,9 @@ a {
       grid-area: grid-sidebar-right;
       margin-right: 0;
       flex-direction: column;
-      @media all and ($mobile) {
+      @media all and not ($desktop) {
         margin-left: inherit;
         margin-right: inherit;
-      }
-      @media all and not ($desktop) {
         position: initial;
         height: unset;
         width: 100%;
@@ -275,7 +261,7 @@ a {
     & .page-header {
       grid-area: grid-header;
       margin: $topSpacing 0 0 0;
-      @media all and ($mobile) {
+      @media all and not ($desktop) {
         margin-top: 0;
         padding: 0;
       }
@@ -295,10 +281,7 @@ a {
       min-width: 100%;
       margin-left: auto;
       margin-right: auto;
-      @media all and ($tablet) {
-        margin-right: 0;
-      }
-      @media all and ($mobile) {
+      @media all and not ($desktop) {
         margin-right: 0;
         margin-left: 0;
       }
@@ -322,7 +305,7 @@ a {
     "grid-center"
     "grid-footer";
 
-  @media all and ($tablet) {
+  @media all and not ($desktop) {
     grid-template-columns: auto;
   }
 
@@ -340,7 +323,7 @@ a {
     "grid-center"
     "grid-footer";
 
-  @media all and ($tablet) {
+  @media all and not ($desktop) {
     grid-template-columns: auto;
   }
 

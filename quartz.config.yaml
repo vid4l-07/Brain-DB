@@ -239,6 +239,7 @@ plugins:
       priority: 60
       condition: not-index
       group: page-name
+      display: desktop-only
     options:
       spacerSymbol: "/"
       rootName: "~"
