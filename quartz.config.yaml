@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
 configuration:
-  pageTitle: Brain DB
+  pageTitle: Hugo Vidal
   pageTitleSuffix: ""
   enableSPA: false
   enablePopovers: true
