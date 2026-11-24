@@ -199,7 +199,7 @@ plugins:
       priority: 10
       group: toolbar
       groupOptions:
-        grow: true
+        grow: false
   - source: github:quartz-community/darkmode
     enabled: false
     layout:
