@@ -58,6 +58,7 @@ tbody, li, p {
 
 time {
   font-size: 0.75rem;
+  opacity: 0.35;
 }
 
 a:hover {
@@ -79,9 +80,6 @@ audio, video {
     display: block;
     margin: 1rem 0;
     width: auto;
-}
-.toc {
-  margin-right: 15px;
 }
 
 .toc-content >li >a {
@@ -131,7 +129,6 @@ code {
 
 .breadcrumb-container {
   gap: 0;
-  margin: 2rem 0 0;
 }
 
 .breadcrumb-element p {
@@ -228,7 +225,6 @@ li.section-li>.section {
 
   > .section > .meta {
     order: -1;
-    margin: 0 0 0.25rem 0;
   }
 
   > .section > .desc > h3 {
@@ -236,8 +232,16 @@ li.section-li>.section {
   }
 }
 
+.content-meta {
+  margin: 1.5rem 0 .25rem;
+}
+
 .meta {
-  margin-bottom: 7px;
+  margin: 0 0 .25rem 0;
+}
+
+.article-title, .breadcrumb-container {
+  margin: 0;
 }
 
 .tags{
@@ -256,7 +260,6 @@ li.section-li>.section {
 
 a.internal.tag-link {
   line-height: 0;
-  // color: var(--tertiary);
 }
 
 a.internal.tag-link:before {
